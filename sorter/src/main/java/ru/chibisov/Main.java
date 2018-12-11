@@ -1,33 +1,36 @@
 package ru.chibisov;
 
-import ru.chibisov.sorter.BubbleSortingStrategy;
-import ru.chibisov.sorter.QuickSortingStrategy;
+
+import ru.chibisov.sorter.QuickSortStrategy;
+import ru.chibisov.sorter.SortBuilder;
 import ru.chibisov.sorter.Sorter;
-import ru.chibisov.sorter.SorterBuilder;
-import ru.chibisov.sorter.quick.Pivotal;
 import ru.chibisov.sorter.quick.pivot.FirstElementPivotStrategy;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 public class Main {
-
     public static void main(String[] args) {
+        List<String> sequence = Arrays.asList(args);
 
-        Sorter<String> sorter  = SorterBuilder.newBuilder()
-                .sortingStrategy(new QuickSortingStrategy<String>())
+        Sorter<String> sorter = SortBuilder.newBuilder()
+                .sortStrategy(new QuickSortStrategy())
                 .pivotStrategy(new FirstElementPivotStrategy())
-                .build();
+//                .returnOnlyView(true)
+                .build(new Comparator<String>() {
+                    public int compare(String o1, String o2) {
+                        int x = Integer.parseInt(o1);
+                        int y = Integer.parseInt(o2);
 
-        Sorter<Integer> sorter1 = SorterBuilder.newBuilder()
-                .sortingStrategy(new QuickSortingStrategy())
-                .pivotStrategy(new FirstElementPivotStrategy())
-                .build();
+                        if (x == y) return 0;
+                        return x > y ? 1 : -1;
+                    }
+                });
 
-        Integer[] array = new Integer[]{2, 1, -1, 1, 0};
-        sorter1.sort(array);
-
-        System.out.println(Arrays.toString(array));
-
+        sorter.sort(sequence);
+//        System.out.println(Joiner.on(" ").join(sequence));
     }
+
 }
 

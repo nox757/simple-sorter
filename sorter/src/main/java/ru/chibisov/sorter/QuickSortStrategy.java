@@ -1,9 +1,11 @@
 package ru.chibisov.sorter;
 
-import ru.chibisov.sorter.quick.Pivotal;
 import ru.chibisov.sorter.quick.pivot.PivotStrategy;
 
-public class QuickSortingStrategy<T extends Comparable<? super T>> implements Pivotal<T>, SortingStrategy<T> {
+import java.util.Comparator;
+import java.util.List;
+
+public class QuickSortStrategy<T> implements SortStrategy<T> {
 
     private PivotStrategy<T> pivotStrategy;
 
@@ -16,11 +18,11 @@ public class QuickSortingStrategy<T extends Comparable<? super T>> implements Pi
     }
 
     @Override
-    public void sort(T[] array) {
-        quickSort(array, 0 ,array.length - 1 );
+    public void sort(T[] array, Comparator<? super T> c) {
+        quickSort(array, 0 ,array.length - 1, c );
     }
 
-    private void quickSort(T[] array, int first, int last) {
+    private void quickSort(T[] array, int first, int last, Comparator<? super T> c) {
         if (array.length == 0)
             return;
         if (first >= last)
@@ -31,10 +33,10 @@ public class QuickSortingStrategy<T extends Comparable<? super T>> implements Pi
 
         int i = first, j = last;
         while (i <= j) {
-            while (array[i].compareTo(opora) < 0) {
+            while (c.compare(array[i], opora) < 0) {
                 i++;
             }
-            while (array[j].compareTo(opora) > 0) {
+            while (c.compare(array[j], opora) > 0) {
                 j--;
             }
 
@@ -48,13 +50,17 @@ public class QuickSortingStrategy<T extends Comparable<? super T>> implements Pi
         }
 
         if (first < j) {
-            quickSort(array, first, j);
+            quickSort(array, first, j, c);
         }
 
         if (last > i) {
-            quickSort(array, i, last);
+            quickSort(array, i, last, c);
         }
     }
 
 
+    @Override
+    public void sort(List<T> collection, Comparator<? super T> c) {
+        //todo: add release method
+    }
 }
