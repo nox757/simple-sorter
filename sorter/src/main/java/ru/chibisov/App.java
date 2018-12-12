@@ -1,6 +1,6 @@
 package ru.chibisov;
 
-
+import com.google.common.base.Joiner;
 import ru.chibisov.sorter.QuickSortStrategy;
 import ru.chibisov.sorter.SortBuilder;
 import ru.chibisov.sorter.Sorter;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class Main {
+public class App {
     public static void main(String[] args) {
         List<String> sequence = Arrays.asList(args);
 
@@ -29,7 +29,7 @@ public class Main {
                 });
 
         sorter.sort(sequence);
-//        System.out.println(Joiner.on(" ").join(sequence));
+        System.out.print(Joiner.on(" ").join(sequence));
     }
 
 }
