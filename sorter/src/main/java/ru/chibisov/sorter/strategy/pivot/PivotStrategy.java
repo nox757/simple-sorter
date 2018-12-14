@@ -1,4 +1,4 @@
-package ru.chibisov.sorter.quick.pivot;
+package ru.chibisov.sorter.strategy.pivot;
 
 import java.util.List;
 

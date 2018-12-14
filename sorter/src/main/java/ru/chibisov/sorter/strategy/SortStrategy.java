@@ -1,4 +1,4 @@
-package ru.chibisov.sorter;
+package ru.chibisov.sorter.strategy;
 
 import java.util.Comparator;
 import java.util.List;

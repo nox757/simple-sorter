@@ -1,10 +1,12 @@
 package ru.chibisov;
 
 import com.google.common.base.Joiner;
-import ru.chibisov.sorter.QuickSortStrategy;
+import ru.chibisov.sorter.strategy.QuickSortStrategy;
 import ru.chibisov.sorter.SortBuilder;
 import ru.chibisov.sorter.Sorter;
-import ru.chibisov.sorter.quick.pivot.FirstElementPivotStrategy;
+import ru.chibisov.sorter.strategy.SortStrategyType;
+import ru.chibisov.sorter.strategy.pivot.FirstElementPivotStrategy;
+import ru.chibisov.sorter.strategy.pivot.PivotStrategyType;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -15,9 +17,8 @@ public class App {
         List<String> sequence = Arrays.asList(args);
 
         Sorter<String> sorter = SortBuilder.newBuilder()
-                .sortStrategy(new QuickSortStrategy())
-                .pivotStrategy(new FirstElementPivotStrategy())
-//                .returnOnlyView(true)
+                .sortStrategy(SortStrategyType.QUICK)
+                .pivotStrategy(PivotStrategyType.LAST_ELEMENT)
                 .build(new Comparator<String>() {
                     public int compare(String o1, String o2) {
                         int x = Integer.parseInt(o1);

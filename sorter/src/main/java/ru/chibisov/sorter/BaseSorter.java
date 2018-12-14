@@ -1,5 +1,7 @@
 package ru.chibisov.sorter;
 
+import ru.chibisov.sorter.strategy.SortStrategy;
+
 import java.util.Comparator;
 import java.util.List;
 

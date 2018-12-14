@@ -1,6 +1,6 @@
-package ru.chibisov.sorter;
+package ru.chibisov.sorter.strategy;
 
-import ru.chibisov.sorter.quick.pivot.PivotStrategy;
+import ru.chibisov.sorter.strategy.pivot.PivotStrategy;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -10,12 +10,8 @@ public class QuickSortStrategy<T> implements SortStrategy<T> {
 
     private PivotStrategy<T> pivotStrategy;
 
-    public void setPivotStrategy(PivotStrategy<T> pivotStrategy) {
+    public QuickSortStrategy(PivotStrategy<T> pivotStrategy) {
         this.pivotStrategy = pivotStrategy;
-    }
-
-    public PivotStrategy<T> getPivotStrategy() {
-        return pivotStrategy;
     }
 
     @Override
