@@ -58,7 +58,7 @@ public class SortBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void buildWithoutStrategy() {
-        Sorter<String> sorter = SortBuilder.newBuilder()
+        SortBuilder.newBuilder()
                 .build(new Comparator<String>() {
                     public int compare(String o1, String o2) {
                         int x = Integer.parseInt(o1);
@@ -74,7 +74,7 @@ public class SortBuilderTest {
     public void buildWithoutPaviot() {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("Add sortStrategy");
-        Sorter<String> sorter = SortBuilder.newBuilder()
+        SortBuilder.newBuilder()
                 .build(new Comparator<String>() {
                     public int compare(String o1, String o2) {
                         int x = Integer.parseInt(o1);

@@ -29,6 +29,19 @@ public class SortBuilder {
 
     public <T> BaseSorter<T> build(Comparator<? super T> comparator) {
 
+        checkAllComponents(comparator);
+        return new BaseSorter<>(SortStrategyFactory.<T>getSortStrategy(sortStrategy, pivotType),
+                comparator);
+    }
+
+    public <T> ImmutableSorter<T> buildImmutable(Comparator<? super T> comparator) {
+
+        checkAllComponents(comparator);
+        return new ImmutableSorter<>(SortStrategyFactory.<T>getSortStrategy(sortStrategy, pivotType),
+                comparator);
+    }
+
+    private void checkAllComponents(Comparator comparator) {
         if (comparator == null) {
             throw new IllegalArgumentException("Add comparator");
         }
@@ -36,8 +49,5 @@ public class SortBuilder {
         if (sortStrategy == null) {
             throw new IllegalArgumentException("Add sortStrategy");
         }
-
-        return new BaseSorter<T>(SortStrategyFactory.<T>getSortStrategy(sortStrategy, pivotType),
-                comparator);
     }
 }

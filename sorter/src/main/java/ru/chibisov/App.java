@@ -29,8 +29,8 @@ public class App {
                     }
                 });
 
-        sorter.sort(sequence);
-        System.out.print(Joiner.on(" ").join(sequence));
+        List<String> result = sorter.sort(sequence);
+        System.out.print(Joiner.on(" ").join(result));
     }
 
 }

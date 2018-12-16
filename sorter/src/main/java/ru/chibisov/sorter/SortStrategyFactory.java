@@ -9,7 +9,7 @@ import ru.chibisov.sorter.strategy.pivot.LastElementPivotStrategy;
 import ru.chibisov.sorter.strategy.pivot.PivotStrategy;
 import ru.chibisov.sorter.strategy.pivot.PivotStrategyType;
 
-public class SortStrategyFactory {
+public class  SortStrategyFactory {
 
     static <T> SortStrategy<T> getSortStrategy(SortStrategyType strategy, PivotStrategyType pivotType) {
 

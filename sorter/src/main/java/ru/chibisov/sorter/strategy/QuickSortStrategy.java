@@ -23,6 +23,11 @@ public class QuickSortStrategy<T> implements SortStrategy<T> {
         }
     }
 
+    @Override
+    public void sort(List<T> collection, Comparator<? super T> c) {
+        quickSort(collection, 0 ,collection.size() - 1, c );
+    }
+
     private void quickSort(List<T> collection, int first, int last, Comparator<? super T> c) {
         if (collection.size() == 0)
             return;
@@ -57,10 +62,5 @@ public class QuickSortStrategy<T> implements SortStrategy<T> {
         if (last > i) {
             quickSort(collection, i, last, c);
         }
-    }
-
-    @Override
-    public void sort(List<T> collection, Comparator<? super T> c) {
-        quickSort(collection, 0 ,collection.size() - 1, c );
     }
 }

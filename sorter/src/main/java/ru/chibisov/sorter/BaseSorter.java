@@ -7,19 +7,22 @@ import java.util.List;
 
 public class BaseSorter<T> implements Sorter<T> {
 
-    private SortStrategy<T> sortStrategy;
-    private Comparator<? super T> comparator;
+    protected SortStrategy<T> sortStrategy;
+    protected Comparator<? super T> comparator;
 
     public BaseSorter(SortStrategy<T> sortStrategy, Comparator<? super T> comparator) {
         this.sortStrategy = sortStrategy;
         this.comparator = comparator;
     }
 
-    public void sort(T[] array) {
+    public T[] sort(T[] array) {
         this.sortStrategy.sort(array, comparator);
+        return array;
     }
 
-    public void sort(List<T> collection) {
+    public List<T> sort(List<T> collection) {
         this.sortStrategy.sort(collection, comparator);
+        return collection;
     }
+
 }
