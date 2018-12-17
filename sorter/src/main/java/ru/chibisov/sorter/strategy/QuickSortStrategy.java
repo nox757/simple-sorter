@@ -1,6 +1,6 @@
-package ru.chibisov.sorter;
+package ru.chibisov.sorter.strategy;
 
-import ru.chibisov.sorter.quick.pivot.PivotStrategy;
+import ru.chibisov.sorter.strategy.pivot.PivotStrategy;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -10,12 +10,8 @@ public class QuickSortStrategy<T> implements SortStrategy<T> {
 
     private PivotStrategy<T> pivotStrategy;
 
-    public void setPivotStrategy(PivotStrategy<T> pivotStrategy) {
+    public QuickSortStrategy(PivotStrategy<T> pivotStrategy) {
         this.pivotStrategy = pivotStrategy;
-    }
-
-    public PivotStrategy<T> getPivotStrategy() {
-        return pivotStrategy;
     }
 
     @Override
@@ -25,6 +21,11 @@ public class QuickSortStrategy<T> implements SortStrategy<T> {
         for(int i = 0; i < array.length; i++) {
             array[i] = collection.get(i);
         }
+    }
+
+    @Override
+    public void sort(List<T> collection, Comparator<? super T> c) {
+        quickSort(collection, 0 ,collection.size() - 1, c );
     }
 
     private void quickSort(List<T> collection, int first, int last, Comparator<? super T> c) {
@@ -61,10 +62,5 @@ public class QuickSortStrategy<T> implements SortStrategy<T> {
         if (last > i) {
             quickSort(collection, i, last, c);
         }
-    }
-
-    @Override
-    public void sort(List<T> collection, Comparator<? super T> c) {
-        quickSort(collection, 0 ,collection.size() - 1, c );
     }
 }

@@ -1,16 +1,15 @@
-package ru.chibisov.sorter.quick.pivot;
+package ru.chibisov.sorter.strategy.pivot;
 
 import java.util.List;
 
-public class FirstElementPivotStrategy<T> implements PivotStrategy<T> {
-
+public class LastElementPivotStrategy<T> implements PivotStrategy<T> {
     @Override
     public int getPivot(T[] array, int first, int last) {
-        return first;
+        return last;
     }
 
     @Override
     public int getPivot(List<T> collection, int first, int last) {
-        return first;
+        return last;
     }
 }
