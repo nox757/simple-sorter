@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 
 
 public class SortBuilderTest {
@@ -56,8 +57,10 @@ public class SortBuilderTest {
         assertArrayEquals(new String[]{"1", "2", "3"}, source.toArray());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void buildWithoutStrategy() {
+        expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("Add sortStrategy");
         SortBuilder.newBuilder()
                 .build(new Comparator<String>() {
                     public int compare(String o1, String o2) {
@@ -71,10 +74,11 @@ public class SortBuilderTest {
     }
 
     @Test
-    public void buildWithoutPaviot() {
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("Add sortStrategy");
+    public void buildWithoutPivot() {
+        expectedEx.expect(NullPointerException.class);
+        expectedEx.expectMessage("Pivot type can not null");
         SortBuilder.newBuilder()
+                .sortStrategy(SortStrategyType.QUICK)
                 .build(new Comparator<String>() {
                     public int compare(String o1, String o2) {
                         int x = Integer.parseInt(o1);
@@ -84,6 +88,28 @@ public class SortBuilderTest {
                         return x > y ? 1 : -1;
                     }
                 });
+    }
+
+    @Test
+    public void buildImmutable() {
+        Sorter<String> sorter = SortBuilder.newBuilder()
+                .pivotStrategy(PivotStrategyType.FIRST_ELEMENT)
+                .sortStrategy(SortStrategyType.QUICK)
+                .buildImmutable(new Comparator<String>() {
+                    public int compare(String o1, String o2) {
+                        int x = Integer.parseInt(o1);
+                        int y = Integer.parseInt(o2);
+
+                        if (x == y) return 0;
+                        return x > y ? 1 : -1;
+                    }
+                });
+
+        List<String> source = Arrays.asList("3", "2", "1");
+        List<String> result = sorter.sort(source);
+
+        assertArrayEquals(new String[]{"1", "2", "3"}, result.toArray());
+        assertNotSame(source, result);
     }
 
 }

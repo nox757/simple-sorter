@@ -44,12 +44,6 @@ public class AppTest {
         assertEquals("777", testOut.toString().trim());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testUnparsableArgument() {
-        String[] args = new String[]{"as888"};
-        App.main(args);
-    }
-
     @After
     public void restoreSystemInputOutput() {
         System.setOut(systemOut);
