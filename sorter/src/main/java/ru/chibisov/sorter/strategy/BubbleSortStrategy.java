@@ -7,21 +7,21 @@ import java.util.List;
 public class BubbleSortStrategy<T> implements SortStrategy<T> {
 
     @Override
-    public void sort(T[] array, Comparator<? super T> c) {
+    public void sort(T[] array, Comparator<? super T> comparator) {
         List<T> collection = Arrays.asList(array);
-        sort(collection, c);
+        sort(collection, comparator);
         for (int i = 0; i < array.length; i++) {
             array[i] = collection.get(i);
         }
     }
 
     @Override
-    public void sort(List<T> collection, Comparator<? super T> c) {
+    public void sort(List<T> collection, Comparator<? super T> comparator) {
         int sizeArray = collection.size();
         T temp;
         for (int i = 0; i < sizeArray; i++) {
             for (int j = sizeArray - 1; j > i; j--) {
-                if (c.compare(collection.get(j - 1), collection.get(j)) > 0) {
+                if (comparator.compare(collection.get(j - 1), collection.get(j)) > 0) {
                     temp = collection.get(i);
                     collection.set(i, collection.get(j));
                     collection.set(j, temp);

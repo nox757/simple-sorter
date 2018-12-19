@@ -1,0 +1,11 @@
+# Based on: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+.idea/
+*.iws
+*.iml
+out/
+
+# Maven
+log/
+target/
+
+EOF

@@ -9,21 +9,21 @@ import ru.chibisov.sorter.strategy.pivot.LastElementPivotStrategy;
 import ru.chibisov.sorter.strategy.pivot.PivotStrategy;
 import ru.chibisov.sorter.strategy.pivot.PivotStrategyType;
 
-public class  SortStrategyFactory {
+class  SortStrategyFactory {
 
     static <T> SortStrategy<T> getSortStrategy(SortStrategyType strategy, PivotStrategyType pivotType) {
 
         if (strategy == null) {
-            throw new NullPointerException("Sort type can not null");
+            throw new IllegalArgumentException("Sort type can not null");
         }
 
         SortStrategy<T> realization;
         switch (strategy) {
             case BUBBLE:
-                realization = new BubbleSortStrategy<T>();
+                realization = new BubbleSortStrategy<>();
                 break;
             case QUICK:
-                realization = new QuickSortStrategy<T>(SortStrategyFactory.<T>pivot(pivotType));
+                realization = new QuickSortStrategy<>(SortStrategyFactory.<T>pivot(pivotType));
                 break;
             default:
                 throw new RuntimeException("Unknown sort type");
@@ -34,19 +34,19 @@ public class  SortStrategyFactory {
     private static <T> PivotStrategy<T> pivot(PivotStrategyType type) {
 
         if (type == null) {
-            throw new NullPointerException("Pivot type can not null");
+            throw new IllegalArgumentException("Pivot type can not null");
         }
 
         PivotStrategy<T> pivot;
         switch (type) {
             case FIRST_ELEMENT:
-                pivot = new FirstElementPivotStrategy<T>();
+                pivot = new FirstElementPivotStrategy<>();
                 break;
             case LAST_ELEMENT:
-                pivot = new LastElementPivotStrategy<T>();
+                pivot = new LastElementPivotStrategy<>();
                 break;
             default:
-                pivot = new FirstElementPivotStrategy<T>();
+                throw new RuntimeException("Unknown sort type");
         }
         return pivot;
     }

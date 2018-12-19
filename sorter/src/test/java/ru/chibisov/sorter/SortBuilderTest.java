@@ -75,7 +75,7 @@ public class SortBuilderTest {
 
     @Test
     public void buildWithoutPivot() {
-        expectedEx.expect(NullPointerException.class);
+        expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("Pivot type can not null");
         SortBuilder.newBuilder()
                 .sortStrategy(SortStrategyType.QUICK)

@@ -1,4 +1,4 @@
-package ru.chibisov;
+package ru.chibisov.app;
 
 import org.junit.After;
 import org.junit.Before;

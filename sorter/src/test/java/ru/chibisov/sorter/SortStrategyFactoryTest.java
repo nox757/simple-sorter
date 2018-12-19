@@ -41,8 +41,8 @@ public class SortStrategyFactoryTest {
     public static Collection primeNumbers() {
         return Arrays.asList(
                 new Object[][]{
-                        {null, null, null, NullPointerException.class, "Sort type can not null"},
-                        {SortStrategyType.QUICK, null, null, NullPointerException.class, "Pivot type can not null"},
+                        {null, null, null, IllegalArgumentException.class, "Sort type can not null"},
+                        {SortStrategyType.QUICK, null, null, IllegalArgumentException.class, "Pivot type can not null"},
                         {SortStrategyType.BUBBLE, null, BubbleSortStrategy.class, null, null},
                         {SortStrategyType.BUBBLE, PivotStrategyType.FIRST_ELEMENT, BubbleSortStrategy.class, null, null},
                         {SortStrategyType.QUICK, PivotStrategyType.FIRST_ELEMENT, QuickSortStrategy.class, null, null},

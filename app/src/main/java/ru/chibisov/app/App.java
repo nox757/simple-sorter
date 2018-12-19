@@ -1,11 +1,9 @@
-package ru.chibisov;
+package ru.chibisov.app;
 
 import com.google.common.base.Joiner;
-import ru.chibisov.sorter.strategy.QuickSortStrategy;
 import ru.chibisov.sorter.SortBuilder;
 import ru.chibisov.sorter.Sorter;
 import ru.chibisov.sorter.strategy.SortStrategyType;
-import ru.chibisov.sorter.strategy.pivot.FirstElementPivotStrategy;
 import ru.chibisov.sorter.strategy.pivot.PivotStrategyType;
 
 import java.util.Arrays;

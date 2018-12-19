@@ -15,34 +15,34 @@ public class QuickSortStrategy<T> implements SortStrategy<T> {
     }
 
     @Override
-    public void sort(T[] array, Comparator<? super T> c) {
+    public void sort(T[] array, Comparator<? super T> comparator) {
         List<T> collection = Arrays.asList(array);
-        quickSort(collection, 0 ,array.length - 1, c );
-        for(int i = 0; i < array.length; i++) {
+        quickSort(collection, 0, array.length - 1, comparator);
+        for (int i = 0; i < array.length; i++) {
             array[i] = collection.get(i);
         }
     }
 
     @Override
-    public void sort(List<T> collection, Comparator<? super T> c) {
-        quickSort(collection, 0 ,collection.size() - 1, c );
+    public void sort(List<T> collection, Comparator<? super T> comparator) {
+        quickSort(collection, 0, collection.size() - 1, comparator);
     }
 
-    private void quickSort(List<T> collection, int first, int last, Comparator<? super T> c) {
+    private void quickSort(List<T> collection, int first, int last, Comparator<? super T> comparator) {
         if (collection.size() == 0)
             return;
         if (first >= last)
             return;
 
-        int pivot = pivotStrategy.getPivot(collection, first, last);
-        T opora = collection.get(pivot);
+        int indexPivot = pivotStrategy.getPivot(collection, first, last);
+        T pivot = collection.get(indexPivot);
 
         int i = first, j = last;
         while (i <= j) {
-            while (c.compare(collection.get(i), opora) < 0) {
+            while (comparator.compare(collection.get(i), pivot) < 0) {
                 i++;
             }
-            while (c.compare(collection.get(j), opora) > 0) {
+            while (comparator.compare(collection.get(j), pivot) > 0) {
                 j--;
             }
 
@@ -56,11 +56,11 @@ public class QuickSortStrategy<T> implements SortStrategy<T> {
         }
 
         if (first < j) {
-            quickSort(collection, first, j, c);
+            quickSort(collection, first, j, comparator);
         }
 
         if (last > i) {
-            quickSort(collection, i, last, c);
+            quickSort(collection, i, last, comparator);
         }
     }
 }
