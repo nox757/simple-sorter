@@ -5,6 +5,9 @@ import ru.chibisov.sorter.strategy.pivot.PivotStrategyType;
 
 import java.util.Comparator;
 
+/**
+ * Constructor of sorter of elements
+ */
 public class SortBuilder {
 
     private SortStrategyType sortStrategy;

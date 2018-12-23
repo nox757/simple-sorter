@@ -5,12 +5,16 @@ import ru.chibisov.sorter.strategy.SortStrategy;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Muttable sorter list or array
+ * @param <T> type of sorting element
+ */
 public class BaseSorter<T> implements Sorter<T> {
 
-    protected SortStrategy<T> sortStrategy;
-    protected Comparator<? super T> comparator;
+    private SortStrategy<T> sortStrategy;
+    private Comparator<? super T> comparator;
 
-    public BaseSorter(SortStrategy<T> sortStrategy, Comparator<? super T> comparator) {
+    BaseSorter(SortStrategy<T> sortStrategy, Comparator<? super T> comparator) {
         this.sortStrategy = sortStrategy;
         this.comparator = comparator;
     }

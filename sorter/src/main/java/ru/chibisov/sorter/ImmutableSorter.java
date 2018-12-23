@@ -7,9 +7,13 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Immutable sorter list or array
+ * @param <T> type of sorting elements
+ */
 public class ImmutableSorter<T> extends BaseSorter<T> {
 
-    public ImmutableSorter(SortStrategy<T> sortStrategy, Comparator<? super T> comparator) {
+    ImmutableSorter(SortStrategy<T> sortStrategy, Comparator<? super T> comparator) {
         super(sortStrategy, comparator);
     }
 
