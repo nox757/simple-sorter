@@ -11,6 +11,7 @@
 
     <modules>
         <module>app</module>
+        <module>db</module>
         <module>sorter</module>
     </modules>
 
