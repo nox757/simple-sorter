@@ -13,16 +13,21 @@
     <artifactId>db</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <liquibase.version>3.6.2</liquibase.version>
+        <postgresql.version>42.2.2</postgresql.version>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-maven-plugin</artifactId>
-            <version>3.6.1</version>
+            <version>${postgresql.version}</version>
         </dependency>
     </dependencies>
 
@@ -31,7 +36,7 @@
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>${liquibase.version}</version>
                 <configuration>
                     <changeLogFile>./changelog/changelog-master.xml</changeLogFile>
                     <driver>org.postgresql.Driver</driver>
