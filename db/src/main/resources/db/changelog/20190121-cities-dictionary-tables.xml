@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="20190121-add-country-table" author="chibisov">
+        <comment>Создание таблицы country</comment>
+
+        <createTable tableName="country" remarks="Страна">
+            <column name="country_id" type="bigint" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="name" type="varchar(255)" remarks="Название страны">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20190121-add-region-table" author="chibisov">
+        <comment>Создание таблицы region</comment>
+
+        <createTable tableName="region" remarks="Регион">
+            <column name="region_id" type="bigint" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="name" type="varchar(255)" remarks="Название региона">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country_id" type="bigint" remarks="Страна">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="region"
+                                 baseColumnNames="country_id"
+                                 constraintName="fk_region_county_id"
+                                 referencedTableName="country"
+                                 referencedColumnNames="country_id"/>
+    </changeSet>
+
+    <changeSet id="20190121-add-mayor-table" author="chibisov">
+        <comment>Создание таблицы mayor</comment>
+
+        <createTable tableName="mayor" remarks="Мэр">
+            <column name="mayor_id" type="bigint" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="fio" type="varchar(255)" remarks="ФИО мэра">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20190121-add-city-table" author="chibisov">
+        <comment>Создание таблицы city</comment>
+
+        <createTable tableName="city" remarks="Город">
+            <column name="city_id" type="bigint" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="name" type="varchar(255)" remarks="Название города">
+                <constraints nullable="false"/>
+            </column>
+            <column name="region_id" type="bigint" remarks="Регион"/>
+            <column name="mayor_id" type="bigint" remarks="Мэр"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="city"
+                                 baseColumnNames="region_id"
+                                 constraintName="fk_city_region_id"
+                                 referencedTableName="region"
+                                 referencedColumnNames="region_id"/>
+
+        <addForeignKeyConstraint baseTableName="city"
+                                 baseColumnNames="mayor_id"
+                                 constraintName="fk_city_mayor_id"
+                                 referencedTableName="mayor"
+                                 referencedColumnNames="mayor_id"/>
+
+        <addUniqueConstraint tableName="city" columnNames="name, region_id"
+                             constraintName="unique_city_in_region"/>
+    </changeSet>
+
+    <changeSet id="20190121-add-attributetype-table" author="chibisov">
+        <comment>Создание таблицы attributetype</comment>
+
+        <createTable tableName="attributetype" remarks="Тип аттрибута">
+            <column name="attribute_type_id" type="bigint" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="name" type="varchar(255)" remarks="Название типа аттрибута">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20190121-add-attribute-table" author="chibisov">
+        <comment>Создание таблицы attribute</comment>
+
+        <createTable tableName="attribute" remarks="Аттрибут">
+            <column name="attribute_id" type="bigint" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="name" type="varchar(255)" remarks="Название аттрибута">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="value" type="varchar(255)" remarks="Значение аттрибута">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attribute_type_id" type="bigint" remarks="Тип аттрибута">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="attribute"
+                                 baseColumnNames="attribute_type_id"
+                                 constraintName="fk_attribute_attributetype_id"
+                                 referencedTableName="attributetype"
+                                 referencedColumnNames="attribute_type_id"/>
+    </changeSet>
+
+    <changeSet id="20190121-add-city_attribute-table" author="chibisov">
+        <comment>Создание таблицы city_attribute</comment>
+
+        <createTable tableName="city_attribute" remarks="Линковочная таблица между city и attrubute">
+            <column name="city_id" type="bigint" remarks="Город">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attribute_id" type="bigint" remarks="Аттрибут">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="city_attribute"
+                                 baseColumnNames="attribute_id"
+                                 constraintName="fk_city_attribute_attribute_id"
+                                 referencedTableName="attribute"
+                                 referencedColumnNames="attribute_id"/>
+
+        <addForeignKeyConstraint baseTableName="city_attribute"
+                                 baseColumnNames="city_id"
+                                 constraintName="fk_city_attribute_city_id"
+                                 referencedTableName="city"
+                                 referencedColumnNames="city_id"/>
+
+        <addPrimaryKey tableName="city_attribute" columnNames="city_id, attribute_id"
+                       constraintName="pk_city_attribute"/>
+    </changeSet>
+</databaseChangeLog>
