@@ -5,5 +5,5 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <include file="./changelog/20190121-cities-dictionary-tables.xml"/>
+    <include file="src/main/resources/db/changelog/20190121-cities-dictionary-tables.xml"/>
 </databaseChangeLog>

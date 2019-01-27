@@ -38,7 +38,7 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>${liquibase.version}</version>
                 <configuration>
-                    <changeLogFile>./changelog/changelog-master.xml</changeLogFile>
+                    <changeLogFile>src/main/resources/db/changelog/changelog-master.xml</changeLogFile>
                     <driver>org.postgresql.Driver</driver>
                     <url>jdbc:postgresql://packy.db.elephantsql.com:5432/tytkrnan</url>
                     <username>tytkrnan</username>
