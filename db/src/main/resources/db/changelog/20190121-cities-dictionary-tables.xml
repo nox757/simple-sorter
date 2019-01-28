@@ -9,8 +9,8 @@
         <comment>Создание таблицы country</comment>
 
         <createTable tableName="country" remarks="Страна">
-            <column name="country_id" type="bigint" remarks="Первичный ключ">
-                <constraints nullable="false" primaryKey="true" unique="true"/>
+            <column name="country_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar(255)" remarks="Название страны">
                 <constraints nullable="false"/>
@@ -22,8 +22,8 @@
         <comment>Создание таблицы region</comment>
 
         <createTable tableName="region" remarks="Регион">
-            <column name="region_id" type="bigint" remarks="Первичный ключ">
-                <constraints nullable="false" primaryKey="true" unique="true"/>
+            <column name="region_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar(255)" remarks="Название региона">
                 <constraints nullable="false"/>
@@ -44,8 +44,8 @@
         <comment>Создание таблицы mayor</comment>
 
         <createTable tableName="mayor" remarks="Мэр">
-            <column name="mayor_id" type="bigint" remarks="Первичный ключ">
-                <constraints nullable="false" primaryKey="true" unique="true"/>
+            <column name="mayor_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="fio" type="varchar(255)" remarks="ФИО мэра">
                 <constraints nullable="false"/>
@@ -57,8 +57,8 @@
         <comment>Создание таблицы city</comment>
 
         <createTable tableName="city" remarks="Город">
-            <column name="city_id" type="bigint" remarks="Первичный ключ">
-                <constraints nullable="false" primaryKey="true" unique="true"/>
+            <column name="city_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar(255)" remarks="Название города">
                 <constraints nullable="false"/>
@@ -87,8 +87,8 @@
         <comment>Создание таблицы attributetype</comment>
 
         <createTable tableName="attributetype" remarks="Тип аттрибута">
-            <column name="attribute_type_id" type="bigint" remarks="Первичный ключ">
-                <constraints nullable="false" primaryKey="true" unique="true"/>
+            <column name="attribute_type_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar(255)" remarks="Название типа аттрибута">
                 <constraints nullable="false" unique="true"/>
@@ -100,8 +100,8 @@
         <comment>Создание таблицы attribute</comment>
 
         <createTable tableName="attribute" remarks="Аттрибут">
-            <column name="attribute_id" type="bigint" remarks="Первичный ключ">
-                <constraints nullable="false" primaryKey="true" unique="true"/>
+            <column name="attribute_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar(255)" remarks="Название аттрибута">
                 <constraints nullable="false" unique="true"/>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="20190128-data-for-cities-dictionary" author="chibisov">
+        <comment>Добавление данных в базу</comment>
+
+        <insert tableName="country">
+            <column name="name">Россия</column>
+        </insert>
+        <insert tableName="region">
+            <column name="name">Московская обл.</column>
+            <column name="country_id">1</column>
+        </insert>
+
+        <insert tableName="mayor">
+            <column name="fio" value="Иванов Иван Иванович"/>
+        </insert>
+        <insert tableName="city">
+            <column name="name" value="Одинцово"/>
+            <column name="mayor_id" value="1"/>
+            <column name="region_id" value="1"/>
+        </insert>
+
+        <insert tableName="attributetype">
+            <column name="name" value="Boolean"/>
+        </insert>
+        <insert tableName="attribute">
+            <column name="name" value="Город Федерального значения"/>
+            <column name="attribute_type_id" value="1"/>
+            <column name="value" value="false"/>
+        </insert>
+        <insert tableName="city_attribute">
+            <column name="city_id" value="1"/>
+            <column name="attribute_id" value="1"/>
+        </insert>
+
+        <rollback>
+            delete from city_attribute where city_id = 1 and attribute_id = 1;
+            delete from city where city_id = 1;
+            delete from region where region_id = 1;
+            delete from country where country_id = 1;
+            delete from mayor where mayor_id = 1;
+            delete from attribute where attribute_id = 1;
+            delete from attributetype where attribute_type_id = 1;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
