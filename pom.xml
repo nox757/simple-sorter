@@ -12,6 +12,7 @@
     <modules>
         <module>app</module>
         <module>db</module>
+        <module>dbservice</module>
         <module>sorter</module>
     </modules>
 
