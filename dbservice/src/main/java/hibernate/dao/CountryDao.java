@@ -2,8 +2,6 @@ package hibernate.dao;
 
 import hibernate.entities.Country;
 
-public interface CountryDao {
+public interface CountryDao extends DAO<Country, Long>{
 
-    public void save(Country country);
-    public Country getById(Long id);
 }

@@ -11,11 +11,11 @@ public class CountryServices {
         this.countryDao = countryDao;
     }
 
-    public void saveCountry(Country country) {
-        countryDao.save(country);
+    public void save(Country country) {
+        countryDao.create(country);
     }
 
     public Country getById(Long id) {
-        return countryDao.getById(id);
+        return countryDao.read(id);
     }
 }
