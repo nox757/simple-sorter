@@ -1,47 +1,30 @@
 package hibernate.entities;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Table(name = "region")
-public class Region {
+@Table(name = "attributetype") //todo: rename table
+public class AttributeType {
 
     @Id
-    @Column(name = "region_id")
+    @Column(name = "attribute_type_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
-    private List<City> cities = new ArrayList<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id")
-    private Country country;
+    private AttributeCity attributeCity;
 
-    public Region() {
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
+    public AttributeType() {
     }
 
     public Long getId() {
@@ -60,12 +43,11 @@ public class Region {
         this.name = name;
     }
 
-    public List<City> getCities() {
-        return cities;
+    public AttributeCity getAttributeCity() {
+        return attributeCity;
     }
 
-    public void setCities(List<City> cities) {
-        this.cities = cities;
+    public void setAttributeCity(AttributeCity attributeCity) {
+        this.attributeCity = attributeCity;
     }
-
 }

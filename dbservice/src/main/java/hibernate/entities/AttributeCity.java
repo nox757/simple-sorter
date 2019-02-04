@@ -3,46 +3,35 @@ package hibernate.entities;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "region")
-public class Region {
+@Table(name = "attribute")
+public class AttributeCity {
 
     @Id
-    @Column(name = "region_id")
+    @Column(name = "attribute_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
+    @Column(name = "value")
+    private String value;
+
+    @OneToMany(mappedBy = "attributeCity", cascade = CascadeType.ALL)
+    private List<AttributeType> attributeType;
+
+    @ManyToMany(mappedBy="attributes")
     private List<City> cities = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id")
-    private Country country;
-
-    public Region() {
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
-    }
 
     public Long getId() {
         return id;
@@ -60,12 +49,19 @@ public class Region {
         this.name = name;
     }
 
-    public List<City> getCities() {
-        return cities;
+    public String getValue() {
+        return value;
     }
 
-    public void setCities(List<City> cities) {
-        this.cities = cities;
+    public void setValue(String value) {
+        this.value = value;
     }
 
+    public List<AttributeType> getAttributeType() {
+        return attributeType;
+    }
+
+    public void setAttributeType(List<AttributeType> attributeType) {
+        this.attributeType = attributeType;
+    }
 }

@@ -41,6 +41,7 @@ abstract class AbstractDAO<T, P extends Serializable> implements DAO<T, P> {
             session = HibernateSessionUtil.getSessionFactory().openSession();
             session.beginTransaction();
             result = session.get(getEntityClass(), id);
+            session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
             if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
@@ -62,6 +63,7 @@ abstract class AbstractDAO<T, P extends Serializable> implements DAO<T, P> {
             session = HibernateSessionUtil.getSessionFactory().openSession();
             session.beginTransaction();
             session.update(object);
+            session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
             if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
@@ -82,6 +84,7 @@ abstract class AbstractDAO<T, P extends Serializable> implements DAO<T, P> {
             session = HibernateSessionUtil.getSessionFactory().openSession();
             session.beginTransaction();
             session.delete(object);
+            session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
             if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
