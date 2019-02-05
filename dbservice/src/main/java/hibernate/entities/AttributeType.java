@@ -6,8 +6,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "attributetype") //todo: rename table
@@ -15,14 +20,14 @@ public class AttributeType {
 
     @Id
     @Column(name = "attribute_type_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //todo: replace seq
     private Long id;
 
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private AttributeCity attributeCity;
+    @OneToMany(mappedBy = "attributeType")
+    private List<AttributeCity> attributeCity = new ArrayList<>();
 
     public AttributeType() {
     }
@@ -43,11 +48,12 @@ public class AttributeType {
         this.name = name;
     }
 
-    public AttributeCity getAttributeCity() {
+    public List<AttributeCity> getAttributeCity() {
         return attributeCity;
     }
 
-    public void setAttributeCity(AttributeCity attributeCity) {
+    public AttributeType setAttributeCity(List<AttributeCity> attributeCity) {
         this.attributeCity = attributeCity;
+        return this;
     }
 }

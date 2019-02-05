@@ -39,6 +39,7 @@ public class City {
     private List<AttributeCity> attributes = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="region_id")
     private Region region;
 
     public City() {
