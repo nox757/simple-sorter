@@ -7,9 +7,9 @@ public class Main {
     public static void main(String[] args) {
         CountryServices countryServices = new CountryServices(new CountryDaoImpl());
         Country country = new Country();
-        country.setName("jjjjjjj");
+        country.setName("jjjjjjj2");
 
         countryServices.save(country);
-        System.out.println(countryServices.getById(5L).getName());
+        System.out.println(countryServices.getById(2L).getName());
     }
 }
