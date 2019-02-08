@@ -1,30 +1,43 @@
 package hibernate.dao;
 
-import hibernate.HibernateSessionUtil;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
+import java.util.List;
 
-abstract class AbstractDAO<T, P extends Serializable> implements DAO<T, P> {
+abstract class AbstractDAO<T, ID extends Serializable> implements DAO<T, ID> {
+
+    private final SessionFactory sessionFactory;
 
     protected abstract Class<T> getEntityClass();
 
+    public AbstractDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
     @Override
-    public P create(T object) {
+    public ID create(T object) {
         Session session = null;
-        P id = null;
+        ID id = null;
         try {
-            session = HibernateSessionUtil.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             session.beginTransaction();
-            id = (P) session.save(object);
+            id = (ID) session.save(object);
             session.flush();
             session.getTransaction().commit();
-        } catch (Exception e) {
-            if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
-                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK) {
-                session.getTransaction().rollback();
+        } catch (Exception ex) {
+            if (session != null) {
+               rollbackTransaction(session);
             }
+            throw new HibernateDdException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -34,19 +47,18 @@ abstract class AbstractDAO<T, P extends Serializable> implements DAO<T, P> {
     }
 
     @Override
-    public T read(P id) {
+    public T read(ID id) {
         T result = null;
         Session session = null;
         try {
-            session = HibernateSessionUtil.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             session.beginTransaction();
             result = session.get(getEntityClass(), id);
             session.flush();
             session.getTransaction().commit();
-        } catch (Exception e) {
-            if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
-                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK) {
-                session.getTransaction().rollback();
+        } catch (Exception ex) {
+            if (session != null) {
+                rollbackTransaction(session);
             }
         } finally {
             if (session != null && session.isOpen()) {
@@ -60,15 +72,14 @@ abstract class AbstractDAO<T, P extends Serializable> implements DAO<T, P> {
     public void update(T object) {
         Session session = null;
         try {
-            session = HibernateSessionUtil.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             session.beginTransaction();
             session.update(object);
             session.flush();
             session.getTransaction().commit();
-        } catch (Exception e) {
-            if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
-                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK) {
-                session.getTransaction().rollback();
+        } catch (Exception ex) {
+            if (session != null) {
+                rollbackTransaction(session);
             }
         } finally {
             if (session != null && session.isOpen()) {
@@ -81,20 +92,48 @@ abstract class AbstractDAO<T, P extends Serializable> implements DAO<T, P> {
     public void delete(T object) {
         Session session = null;
         try {
-            session = HibernateSessionUtil.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             session.beginTransaction();
             session.delete(object);
             session.flush();
             session.getTransaction().commit();
-        } catch (Exception e) {
-            if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
-                    || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK) {
-                session.getTransaction().rollback();
+        } catch (Exception ex) {
+            if (session != null) {
+                rollbackTransaction(session);
             }
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
             }
+        }
+    }
+
+    @Override
+    public List<T> getAll() {
+        Session session = null;
+        ID id = null;
+        try {
+            session = sessionFactory.openSession();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery criteria = builder.createQuery(getEntityClass());
+            criteria.from(getEntityClass());
+            return session.createQuery(criteria).getResultList();
+        } catch (Exception ex) {
+            if (session != null) {
+                rollbackTransaction(session);
+            }
+            throw new HibernateDdException(ex);
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+    }
+
+    protected void rollbackTransaction(Session session) {
+        if (session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+                || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK) {
+            session.getTransaction().rollback();
         }
     }
 }

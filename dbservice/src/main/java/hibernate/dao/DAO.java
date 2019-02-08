@@ -3,14 +3,15 @@ package hibernate.dao;
 import java.io.Serializable;
 import java.util.List;
 
-public interface DAO <T, P extends Serializable> {
+public interface DAO <T, ID extends Serializable> {
 
-    P create(T object);
+    ID create(T object);
 
-    T read(P id);
+    T read(ID id);
 
     void update(T object);
 
     void delete(T object);
 
+    List<T> getAll();
 }
