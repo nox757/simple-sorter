@@ -14,11 +14,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <properties>
-        <hibernate.version>5.4.1.Final</hibernate.version>
-        <postgresql.version>42.2.2</postgresql.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -31,6 +26,5 @@
             <version>${hibernate.version}</version>
         </dependency>
     </dependencies>
-
     
 </project>

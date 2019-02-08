@@ -25,7 +25,7 @@
             <column name="region_id" value="1"/>
         </insert>
 
-        <insert tableName="attributetype">
+        <insert tableName="attribute_type">
             <column name="name" value="Boolean"/>
         </insert>
         <insert tableName="attribute">
@@ -45,7 +45,7 @@
             delete from country where country_id = 1;
             delete from mayor where mayor_id = 1;
             delete from attribute where attribute_id = 1;
-            delete from attributetype where attribute_type_id = 1;
+            delete from attribute_type where attribute_type_id = 1;
         </rollback>
     </changeSet>
 

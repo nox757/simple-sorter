@@ -23,6 +23,9 @@
 
         <junit.version>4.12</junit.version>
         <mockito.version>2.21.0</mockito.version>
+        <liquibase.version>3.6.2</liquibase.version>
+        <postgresql.version>42.2.2</postgresql.version>
+        <hibernate.version>5.4.1.Final</hibernate.version>
     </properties>
 
     <dependencies>
