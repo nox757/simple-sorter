@@ -1,5 +1,6 @@
 package hibernate.dao;
 
+import hibernate.dao.interfeces.DAO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
@@ -9,10 +10,19 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Abstract class to provide CRUD operations
+ * @param <T> type of mapping class object db
+ * @param <ID> type of primary key
+ */
 abstract class AbstractDAO<T, ID extends Serializable> implements DAO<T, ID> {
 
     private final SessionFactory sessionFactory;
 
+    /**
+     *
+     * @return
+     */
     protected abstract Class<T> getEntityClass();
 
     public AbstractDAO(SessionFactory sessionFactory) {

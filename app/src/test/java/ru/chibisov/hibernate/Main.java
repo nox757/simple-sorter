@@ -1,4 +1,6 @@
-import hibernate.dao.CountryDao;
+package ru.chibisov.hibernate;
+
+import hibernate.dao.interfeces.CountryDao;
 import hibernate.util.HibernateSessionEx;
 import hibernate.util.HibernateUtil;
 import hibernate.dao.CountryDaoImpl;
@@ -8,9 +10,7 @@ import hibernate.entities.City;
 import hibernate.entities.Country;
 import hibernate.entities.Mayor;
 import hibernate.entities.Region;
-import services.CountryServices;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

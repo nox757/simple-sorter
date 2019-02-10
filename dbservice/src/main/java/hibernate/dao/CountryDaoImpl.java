@@ -1,5 +1,6 @@
 package hibernate.dao;
 
+import hibernate.dao.interfeces.CountryDao;
 import hibernate.entities.Country;
 import org.hibernate.SessionFactory;
 
