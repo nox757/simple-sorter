@@ -19,10 +19,6 @@ abstract class AbstractDAO<T, ID extends Serializable> implements DAO<T, ID> {
 
     private final SessionFactory sessionFactory;
 
-    /**
-     *
-     * @return
-     */
     protected abstract Class<T> getEntityClass();
 
     public AbstractDAO(SessionFactory sessionFactory) {
@@ -70,6 +66,7 @@ abstract class AbstractDAO<T, ID extends Serializable> implements DAO<T, ID> {
             if (session != null) {
                 rollbackTransaction(session);
             }
+            throw new HibernateDdException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -91,6 +88,7 @@ abstract class AbstractDAO<T, ID extends Serializable> implements DAO<T, ID> {
             if (session != null) {
                 rollbackTransaction(session);
             }
+            throw new HibernateDdException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -111,6 +109,7 @@ abstract class AbstractDAO<T, ID extends Serializable> implements DAO<T, ID> {
             if (session != null) {
                 rollbackTransaction(session);
             }
+            throw new HibernateDdException(ex);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
