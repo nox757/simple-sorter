@@ -1,6 +1,6 @@
-package hibernate.dao.interfeces;
+package dai;
 
-import hibernate.entities.AttributeType;
+import entities.AttributeType;
 
 /**
  * Operations of attribute type

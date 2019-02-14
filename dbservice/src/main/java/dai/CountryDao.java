@@ -1,6 +1,6 @@
-package hibernate.dao.interfeces;
+package dai;
 
-import hibernate.entities.Country;
+import entities.Country;
 
 /**
  * Operations of country

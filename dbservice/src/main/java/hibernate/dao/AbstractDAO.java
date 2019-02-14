@@ -1,6 +1,7 @@
 package hibernate.dao;
 
-import hibernate.dao.interfeces.DAO;
+import dai.DAO;
+import dai.Identifiable;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
@@ -15,7 +16,7 @@ import java.util.List;
  * @param <T> type of mapping class object db
  * @param <ID> type of primary key
  */
-abstract class AbstractDAO<T, ID extends Serializable> implements DAO<T, ID> {
+abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> implements DAO<T, ID> {
 
     private final SessionFactory sessionFactory;
 

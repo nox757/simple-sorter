@@ -1,6 +1,6 @@
-package hibernate.dao.interfeces;
+package dai;
 
-import hibernate.entities.AttributeCity;
+import entities.AttributeCity;
 
 /**
  * Operations of attribute city

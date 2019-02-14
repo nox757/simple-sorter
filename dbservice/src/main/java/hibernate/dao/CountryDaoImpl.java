@@ -1,7 +1,7 @@
 package hibernate.dao;
 
-import hibernate.dao.interfeces.CountryDao;
-import hibernate.entities.Country;
+import dai.CountryDao;
+import entities.Country;
 import org.hibernate.SessionFactory;
 
 public class CountryDaoImpl extends AbstractDAO<Country, Long> implements CountryDao {

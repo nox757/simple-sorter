@@ -1,15 +1,15 @@
 package ru.chibisov.hibernate;
 
-import hibernate.dao.interfeces.CountryDao;
+import dai.CountryDao;
 import hibernate.util.HibernateSessionEx;
 import hibernate.util.HibernateUtil;
 import hibernate.dao.CountryDaoImpl;
-import hibernate.entities.AttributeCity;
-import hibernate.entities.AttributeType;
-import hibernate.entities.City;
-import hibernate.entities.Country;
-import hibernate.entities.Mayor;
-import hibernate.entities.Region;
+import entities.AttributeCity;
+import entities.AttributeType;
+import entities.City;
+import entities.Country;
+import entities.Mayor;
+import entities.Region;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +19,7 @@ import java.util.Properties;
 
 public class Main {
 
+    //TODO: Временный класс для проверок будет заменен тестами позже
     public static void main(String[] args) {
 
         Properties properties = new Properties();

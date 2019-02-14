@@ -1,6 +1,6 @@
-package hibernate.dao.interfeces;
+package dai;
 
-import hibernate.entities.Mayor;
+import entities.Mayor;
 
 /**
  * Operations of mayor

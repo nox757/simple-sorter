@@ -1,4 +1,6 @@
-package hibernate.entities;
+package entities;
+
+import dai.Identifiable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "attribute")
-public class AttributeCity {
+public class AttributeCity implements Identifiable<Long> {
 
     @Id
     @Column(name = "attribute_id")

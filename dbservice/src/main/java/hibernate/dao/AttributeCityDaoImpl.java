@@ -1,7 +1,7 @@
 package hibernate.dao;
 
-import hibernate.dao.interfeces.AttributeCityDao;
-import hibernate.entities.AttributeCity;
+import dai.AttributeCityDao;
+import entities.AttributeCity;
 import org.hibernate.SessionFactory;
 
 public class AttributeCityDaoImpl extends AbstractDAO<AttributeCity, Long> implements AttributeCityDao {

@@ -1,7 +1,7 @@
 package hibernate.dao;
 
-import hibernate.dao.interfeces.RegionDao;
-import hibernate.entities.Region;
+import dai.RegionDao;
+import entities.Region;
 import org.hibernate.SessionFactory;
 
 public class RegionDaoImpl extends AbstractDAO<Region, Long> implements RegionDao {

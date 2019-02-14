@@ -1,7 +1,7 @@
 package hibernate.dao;
 
-import hibernate.dao.interfeces.MayorDao;
-import hibernate.entities.Mayor;
+import dai.MayorDao;
+import entities.Mayor;
 import org.hibernate.SessionFactory;
 
 public class MayorDaoImpl extends AbstractDAO<Mayor, Long> implements MayorDao {

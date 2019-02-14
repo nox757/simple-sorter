@@ -1,6 +1,6 @@
-package hibernate.dao.interfeces;
+package dai;
 
-import hibernate.entities.City;
+import entities.City;
 
 /**
  * Operations of city

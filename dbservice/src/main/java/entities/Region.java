@@ -1,4 +1,6 @@
-package hibernate.entities;
+package entities;
+
+import dai.Identifiable;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,12 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "region")
-public class Region {
+public class Region implements Identifiable<Long> {
 
     @Id
     @Column(name = "region_id")

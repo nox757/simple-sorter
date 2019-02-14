@@ -1,16 +1,10 @@
 package ru.chibisov.jdbc;
 
-import hibernate.dao.CountryDaoImpl;
-import hibernate.dao.interfeces.CountryDao;
-import hibernate.entities.AttributeCity;
-import hibernate.entities.AttributeType;
-import hibernate.entities.City;
-import hibernate.entities.Country;
-import hibernate.entities.Mayor;
-import hibernate.entities.Region;
-import hibernate.util.HibernateSessionEx;
-import hibernate.util.HibernateUtil;
+import dai.CountryDao;
+import entities.Country;
+import jdbc.CountryDaoImpl;
 import jdbc.connection.ConnectionFactory;
+import jdbc.connection.ConnectionFactoryImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +12,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -26,6 +19,7 @@ public class Main {
 
     private final static String QUERY = "select * from country";
 
+    //TODO: Временный класс для проверок будет заменен тестами позже
     public static void main(String[] args) {
 
         Properties properties = new Properties();
@@ -35,18 +29,23 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ConnectionFactory connectionFactory = new ConnectionFactory(properties);
-        try (Connection connection = connectionFactory.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(QUERY)) {
-            while (rs.next()) {
-                int id = rs.getInt("country_id");
-                String name = rs.getString("name");
-                System.out.println(id + "," + name );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        ConnectionFactory connectionFactory = new ConnectionFactoryImpl(properties);
+        CountryDao countryDao = new CountryDaoImpl(connectionFactory);
+        Country country  = countryDao.read(3L);
+//        countryDao.delete(country);
+        Country country1 = new Country();
+        country1.setName("Новороссия");
+       Long result =  countryDao.create(country1);
+        System.out.println(result);
+//        System.out.println(country.getName());
+//        country.setName("РОССИЯ");
+//        countryDao.update(country);
+//        List<Country> countries = countryDao.getAll();
+//        for (Country country1 : countries) {
+//            System.out.print(country1.getId().toString() + " : ");
+//            System.out.println(country1.getName());
+//        }
+
 
 
     }

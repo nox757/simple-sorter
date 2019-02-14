@@ -1,4 +1,6 @@
-package hibernate.entities;
+package entities;
+
+import dai.Identifiable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "country")
-public class Country {
+public class Country implements Identifiable<Long> {
 
     @Id
     @Column(name = "country_id")

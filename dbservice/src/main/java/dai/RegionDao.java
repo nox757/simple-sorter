@@ -1,6 +1,6 @@
-package hibernate.dao.interfeces;
+package dai;
 
-import hibernate.entities.Region;
+import entities.Region;
 
 /**
  * Operations of region
