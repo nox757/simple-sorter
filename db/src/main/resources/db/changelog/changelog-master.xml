@@ -7,4 +7,5 @@
 
     <include file="src/main/resources/db/changelog/20190121-cities-dictionary-tables.xml"/>
     <include file="src/main/resources/db/changelog/20190128-data-for-cities-dictionary.xml"/>
+    <include file="src/main/resources/db/changelog/20190218-add-version-to-country-table.xml"/>
 </databaseChangeLog>

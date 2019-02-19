@@ -2,6 +2,7 @@ package hibernate.dao;
 
 import dai.DAO;
 import dai.Identifiable;
+import entities.Country;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
@@ -89,6 +90,7 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
             if (session != null) {
                 rollbackTransaction(session);
             }
+            ex.printStackTrace();
             throw new HibernateDdException(ex);
         } finally {
             if (session != null && session.isOpen()) {

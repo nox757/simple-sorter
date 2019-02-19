@@ -1,5 +1,7 @@
 package jdbc.connection;
 
+import hibernate.dao.HibernateDdException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -23,8 +25,7 @@ public class ConnectionFactoryImpl implements ConnectionFactory {
 
             return DriverManager.getConnection(url, name, pass);
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new HibernateDdException(e);
         }
-        return null;
     }
 }
