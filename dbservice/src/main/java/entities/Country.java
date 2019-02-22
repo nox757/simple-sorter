@@ -17,6 +17,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "country")
@@ -73,5 +74,20 @@ public class Country implements Identifiable<Long> {
 
     public void setRegions(List<Region> regions) {
         this.regions = regions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Country country1 = (Country) o;
+        return version == country1.version &&
+                Objects.equals(id, country1.id) &&
+                Objects.equals(name, country1.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, version);
     }
 }

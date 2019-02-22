@@ -20,7 +20,7 @@ import java.util.Properties;
 abstract public class BaseTest {
 
     private final static String DEFAULT_PROPERTY_NAME = "hibernate_default.properties";
-    protected SessionFactory sessionFactory;
+    SessionFactory sessionFactory;
 
     @Before
     public void init() throws HibernateSessionEx {
