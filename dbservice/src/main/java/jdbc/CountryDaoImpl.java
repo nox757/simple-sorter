@@ -3,60 +3,47 @@ package jdbc;
 import dai.CountryDao;
 import entities.Country;
 import jdbc.connection.ConnectionFactory;
+import jdbc.mapper.CountryResultSetMapper;
+import jdbc.mapper.ResultSetMapper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CountryDaoImpl extends AbstractDAO<Country, Long> implements CountryDao {
 
-    private final static String SELECT_QUERY = "SELECT * FROM country";
-    private final static String SELECT_QUERY_BY_ID = "SELECT * FROM country WHERE country_id = ?";
+    private final static String TABLE_NAME = "country";
+    private final static String COLUMN_ID = "country_id";
+    private final static String COLUMN_VALUE = "name";
+
+    public String getTableName() {
+        return TABLE_NAME;
+    }
+
+    public String getColumnId() {
+        return COLUMN_ID;
+    }
+
+    public String getColumnValue() {
+        return COLUMN_VALUE;
+    }
+
     private final static String CREATE_QUERY = "INSERT INTO country (name) VALUES(?)";
-    private final static String UPDATE_QUERY = "UPDATE country SET name = ? WHERE country_id = ?";
-    private final static String DELETE_QUERY = "DELETE FROM country where country_id = ?";
+    private final static ResultSetMapper<Country> resultSetMapper = new CountryResultSetMapper();
 
     public CountryDaoImpl(ConnectionFactory connectionFactory) {
-        super(connectionFactory);
+        super(connectionFactory, resultSetMapper);
     }
 
-    @Override
-    protected List<Country> parseResultSet(ResultSet result) throws SQLException {
-        List<Country> listStudent = new ArrayList<>();
-        while (result.next()) {
-            Country country = new Country();
-            country.setId(result.getLong("country_id"));
-            country.setName(result.getString("name"));
-            listStudent.add(country);
-        }
-        return listStudent;
-    }
 
-    @Override
-    protected String getSelectQuery() {
-        return SELECT_QUERY;
-    }
-
-    @Override
-    protected String getSelectQueryById() {
-        return SELECT_QUERY_BY_ID;
-    }
 
     @Override
     protected String getCreateQuery() {
         return CREATE_QUERY;
-    }
-
-    @Override
-    protected String getUpdateQuery() {
-        return UPDATE_QUERY;
-    }
-
-    @Override
-    protected String getDeleteQuery() {
-        return DELETE_QUERY;
     }
 
     @Override

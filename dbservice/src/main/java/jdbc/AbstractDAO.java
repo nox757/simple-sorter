@@ -3,6 +3,7 @@ package jdbc;
 import dai.DAO;
 import dai.Identifiable;
 import jdbc.connection.ConnectionFactory;
+import jdbc.mapper.ResultSetMapper;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -10,27 +11,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> implements DAO<T, ID> {
 
     protected ConnectionFactory connectionFactory;
 
-    AbstractDAO(ConnectionFactory connectionFactory) {
+    protected ResultSetMapper<T> mapper;
+
+    private final SqlExecutor sqlExecutor = new SqlExecutor();
+
+    public AbstractDAO(ConnectionFactory connectionFactory, ResultSetMapper<T> mapper) {
         this.connectionFactory = connectionFactory;
+        this.mapper = mapper;
+
     }
 
-    protected abstract List<T> parseResultSet(ResultSet rs) throws SQLException;
+    protected abstract String getTableName();
 
-    protected abstract String getSelectQuery();
+    protected abstract String getColumnValue();
 
-    protected abstract String getSelectQueryById();
+    protected abstract String getColumnId();
+
 
     protected abstract String getCreateQuery();
 
-    protected abstract String getUpdateQuery();
-
-    protected abstract String getDeleteQuery();
 
     protected abstract void fillFieldsForUpdate(PreparedStatement statement, T object) throws SQLException;
 
@@ -45,7 +51,7 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
         String sql = getCreateQuery();
         try (Connection connection = connectionFactory.getConnection()) {
             connection.setAutoCommit(false);
-            try (PreparedStatement statement = connection.prepareStatement(sql,  Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 fillFieldsForCreate(statement, object);
                 int count = statement.executeUpdate();
                 if (count != 1) {
@@ -73,21 +79,14 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
     @Override
     public T read(ID id) {
         List<T> list;
-        String sql = getSelectQueryById();
+        String sql = String.format("SELECT * FROM %s WHERE %s = ?", getTableName(), getColumnId());
         try (Connection connection = connectionFactory.getConnection()) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setObject(1, id);
-                ResultSet rs = statement.executeQuery();
-                list = parseResultSet(rs);
-
-            } catch (SQLException e) {
-                connection.rollback();
-                connection.setAutoCommit(true);
-                throw new DBException(e);
-            }
-            connection.commit();
-            connection.setAutoCommit(true);
+            list = sqlExecutor.execQuery(sql, connection, mapper, new FillerStatement() {
+                @Override
+                public void fillStatement(PreparedStatement statement) throws SQLException {
+                    statement.setObject(1, id);
+                }
+            });
         } catch (SQLException e) {
             throw new DBException(e);
         }
@@ -102,24 +101,15 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
 
     @Override
     public void update(T object) {
-        String sql = getUpdateQuery();
+        String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", getTableName(), getColumnValue(), getColumnId());
         try (Connection connection = connectionFactory.getConnection()) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                fillFieldsForUpdate(statement, object);
-                int count = statement.executeUpdate();
-                if (count != 1) {
-                    connection.rollback();
-                    connection.setAutoCommit(true);
-                    throw new DBException(new Exception("Update try modify more then 1 record: " + count));
+            sqlExecutor.execUpdate(sql, connection, new FillerStatement() {
+                @Override
+                public void fillStatement(PreparedStatement statement) throws SQLException {
+                    fillFieldsForUpdate(statement, object);
                 }
-            } catch (SQLException ex) {
-                connection.rollback();
-                connection.setAutoCommit(true);
-                throw new DBException(ex);
-            }
-            connection.commit();
-            connection.setAutoCommit(true);
+            });
+
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
@@ -127,24 +117,14 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
 
     @Override
     public void delete(T object) {
-        String sql = getDeleteQuery();
+        String sql = String.format("DELETE FROM %s where %s = ?", getTableName(), getColumnId());
         try (Connection connection = connectionFactory.getConnection()) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                try {
+            sqlExecutor.execUpdate(sql, connection, new FillerStatement() {
+                @Override
+                public void fillStatement(PreparedStatement statement) throws SQLException {
                     statement.setObject(1, object.getId());
-                } catch (SQLException ex) {
-                    throw new DBException(ex);
                 }
-                int count = statement.executeUpdate();
-                if (count != 1) {
-                    throw new DBException(new Exception("Try delete more then 1 record: " + count));
-                }
-            } catch (SQLException ex) {
-                throw new DBException(ex);
-            }
-            connection.commit();
-            connection.setAutoCommit(true);
+            });
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
@@ -154,23 +134,13 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
     @Override
     public List<T> getAll() {
         List<T> list;
-        String sql = getSelectQuery();
+        String sql = String.format("SELECT * FROM %s", getTableName());
         try (Connection connection = connectionFactory.getConnection()) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                ResultSet rs = statement.executeQuery();
-                list = parseResultSet(rs);
-
-            } catch (SQLException e) {
-                connection.rollback();
-                connection.setAutoCommit(true);
-                throw new DBException(e);
-            }
-            connection.commit();
-            connection.setAutoCommit(true);
+            list = sqlExecutor.execQuery(sql, connection, mapper, null);
         } catch (SQLException e) {
             throw new DBException(e);
         }
         return list;
     }
+
 }

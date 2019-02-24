@@ -2,41 +2,30 @@ package ru.chibisov.hibernate;
 
 import dai.CountryDao;
 import dai.RegionDao;
-import entities.AttributeCity;
-import entities.AttributeType;
-import entities.City;
 import entities.Country;
-import entities.Mayor;
 import entities.Region;
 import hibernate.dao.CountryDaoImpl;
 import hibernate.dao.RegionDaoImpl;
-import hibernate.util.HibernateSessionEx;
-import hibernate.util.HibernateUtil;
+import jdbc.connection.ConnectionFactory;
+import jdbc.connection.ConnectionFactoryImpl;
 import org.hibernate.LockMode;
-import org.hibernate.LockOptions;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.persistence.OptimisticLockException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 
 public class HibernateLockTest extends BaseTest {
 
@@ -142,6 +131,40 @@ public class HibernateLockTest extends BaseTest {
         session.getTransaction().commit();
         future.join();
         assertEquals("New name Region 2", regionDao.read(firstRegion.getId()).getName());
+    }
+
+    @Test
+    public void pessimisticLockJdbcTest() throws InterruptedException {
+        assertEquals(firstCountry.getName(), secondCountry.getName());
+        session = sessionFactory.openSession();
+        //Begin transaction
+        Transaction transaction = session.beginTransaction();
+        firstCountry.setName("New name Country");
+        session.update(firstCountry);
+        session.lock(firstCountry, LockMode.PESSIMISTIC_WRITE);
+//        session.flush(); //it apply query entity and set lock write
+        assertEquals(LockMode.PESSIMISTIC_WRITE, session.getCurrentLockMode(firstCountry));
+        //Update db-row before transaction not commit
+        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+            secondCountry.setName("New name Country 2");
+            Properties properties = new Properties();
+            try {
+                InputStream input = ClassLoader.getSystemClassLoader().getResourceAsStream("db.properties");
+                properties.load(input);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ConnectionFactory connectionFactory = new ConnectionFactoryImpl(properties);
+            CountryDao countryDao = new jdbc.CountryDaoImpl(connectionFactory);
+            countryDao.update(secondCountry);
+        });
+        TimeUnit.SECONDS.sleep(5);
+        assertFalse(future.isDone());
+//        Check that future do not update db-row
+        assertEquals("Country", countryDao.read(firstCountry.getId()).getName());
+        session.getTransaction().commit();
+        future.join();
+        assertEquals("New name Country 2", countryDao.read(firstCountry.getId()).getName());
     }
 
     @After

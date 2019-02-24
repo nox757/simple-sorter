@@ -1,13 +1,8 @@
-package ru.chibisov.hibernate;
+package ru.chibisov.jdbc;
 
 import dai.CountryDao;
-import dai.DAO;
-import dai.Identifiable;
-import dai.RegionDao;
 import entities.Country;
-import entities.Region;
-import hibernate.dao.CountryDaoImpl;
-import hibernate.dao.RegionDaoImpl;
+import jdbc.CountryDaoImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,25 +16,18 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
 
-public class DaoTest extends BaseTest {
+public class CountryDaoJdbcTest extends BaseJdbcTest {
 
+    private final static String QUERY = "select * from country";
     private CountryDao countryDao;
-    private RegionDao regionDao;
     private Country country;
-    private Region region;
 
     @Before
     public void setUp() {
-        countryDao = new CountryDaoImpl(sessionFactory);
+        countryDao = new CountryDaoImpl(connectionFactory);
         country = new Country();
         country.setName("Country");
         country.setId(countryDao.create(country));
-
-        regionDao = new RegionDaoImpl(sessionFactory);
-        region = new Region();
-        region.setCountry(country);
-        region.setName("Region");
-        region.setId(regionDao.create(region));
     }
 
     @Test
@@ -69,31 +57,12 @@ public class DaoTest extends BaseTest {
         assertThat(foundCountries, hasItem(countryInserting));
     }
 
-    @Test
-    public void getRegionFromCountryTest() {
-        Country country = countryDao.read(this.country.getId());
-        Region region = this.region;
-
-        List<Region> regions = country.getRegions();
-        regions.size();
-        assertNotNull(regions);
-        assertThat(regions.size(), is(1));
-        assertThat(regions, hasItem(region));
-
-    }
-
     @After
     public void tearDown() {//TODO: сделать нормальную очистку данных
-        List<Region> regions = regionDao.getAll();
-        clearTable(regions, regionDao);
 
         List<Country> countries = countryDao.getAll();
-        clearTable(countries, countryDao);
-    }
-
-    private <T extends Identifiable> void clearTable(List<T> list, DAO dao) {
-        for (T entity : list) {
-            dao.delete(entity);
+        for (Country entity : countries) {
+            countryDao.delete(entity);
         }
     }
 
