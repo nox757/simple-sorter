@@ -13,7 +13,8 @@ import java.util.List;
 
 public class SqlExecutor {
 
-    public void execUpdate(String sql, Connection connection, FillerStatement fillerStatement) throws SQLException {
+    public Object execUpdate(String sql, Connection connection, FillerStatement fillerStatement) throws SQLException {
+        Object idObject = null;
         connection.setAutoCommit(false);
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             fillerStatement.fillStatement(statement);
@@ -23,6 +24,10 @@ public class SqlExecutor {
                 connection.setAutoCommit(true);
                 throw new DBException(new Exception("Try modify more then 1 record : " + count));
             }
+            ResultSet rs = statement.getGeneratedKeys();
+            if (rs.next()) {
+                idObject = rs.getObject(1);
+            }
         } catch (SQLException ex) {
             connection.rollback();
             connection.setAutoCommit(true);
@@ -30,6 +35,7 @@ public class SqlExecutor {
         }
         connection.commit();
         connection.setAutoCommit(true);
+        return idObject;
     }
 
     public <T extends Identifiable<? extends Serializable>> List<T> execQuery(String sql, Connection connection, ResultSetMapper<T> mapper, FillerStatement fillerStatement) throws SQLException {

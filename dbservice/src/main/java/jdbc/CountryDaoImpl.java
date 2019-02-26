@@ -32,18 +32,12 @@ public class CountryDaoImpl extends AbstractDAO<Country, Long> implements Countr
         return COLUMN_VALUE;
     }
 
-    private final static String CREATE_QUERY = "INSERT INTO country (name) VALUES(?)";
     private final static ResultSetMapper<Country> resultSetMapper = new CountryResultSetMapper();
 
     public CountryDaoImpl(ConnectionFactory connectionFactory) {
         super(connectionFactory, resultSetMapper);
-    }
-
-
-
-    @Override
-    protected String getCreateQuery() {
-        return CREATE_QUERY;
+        super.columns = new ArrayList<>();
+        columns.add(getColumnValue());
     }
 
     @Override

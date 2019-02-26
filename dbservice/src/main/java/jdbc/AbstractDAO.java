@@ -8,24 +8,23 @@ import jdbc.mapper.ResultSetMapper;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> implements DAO<T, ID> {
 
-    protected ConnectionFactory connectionFactory;
-
-    protected ResultSetMapper<T> mapper;
-
     private final SqlExecutor sqlExecutor = new SqlExecutor();
+    protected Pattern pattern = Pattern.compile("[0-9a-zA-Z_]+");
+    protected ConnectionFactory connectionFactory;
+    protected ResultSetMapper<T> mapper;
+    protected List<String> columns;
 
     public AbstractDAO(ConnectionFactory connectionFactory, ResultSetMapper<T> mapper) {
         this.connectionFactory = connectionFactory;
         this.mapper = mapper;
-
     }
 
     protected abstract String getTableName();
@@ -34,13 +33,35 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
 
     protected abstract String getColumnId();
 
-
-    protected abstract String getCreateQuery();
-
-
     protected abstract void fillFieldsForUpdate(PreparedStatement statement, T object) throws SQLException;
 
     protected abstract void fillFieldsForCreate(PreparedStatement statement, T object) throws SQLException;
+
+    protected String getCreateQuery() {
+        checkName(getTableName());
+        String createQuery = String.format("INSERT INTO %s (", getTableName());
+        if (columns == null || columns.size() == 0) {
+            throw new DBException(new Exception("Columns name is not declare"));
+        }
+        StringJoiner joiner = new StringJoiner(",");
+        for (int i = 0; i < columns.size(); i++) {
+            if (!checkName(columns.get(i))) {
+                throw new DBException(new Exception("Column name is wrong: " + columns.get(i)));
+            }
+            joiner.add(columns.get(i));
+        }
+        String values = new String(new char[columns.size()])
+                .replace("\0", "?,")
+                .replaceAll(",$", "");
+        createQuery +=  joiner.toString() + ") VALUES (%s)";
+        createQuery = String.format(createQuery, values);
+        return createQuery;
+    }
+
+    protected boolean checkName(String name) {
+        Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
+    }
 
     @Override
     public ID create(T object) {
@@ -50,26 +71,8 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
         }
         String sql = getCreateQuery();
         try (Connection connection = connectionFactory.getConnection()) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                fillFieldsForCreate(statement, object);
-                int count = statement.executeUpdate();
-                if (count != 1) {
-                    connection.rollback();
-                    connection.setAutoCommit(true);
-                    throw new DBException(new Exception("On persist modify more then 1 record: " + count));
-                }
-                ResultSet rs = statement.getGeneratedKeys();
-                if (rs.next()) {
-                    id = (ID) rs.getObject(1);
-                }
-            } catch (SQLException ex) {
-                connection.rollback();
-                connection.setAutoCommit(true);
-                throw new DBException(ex);
-            }
-            connection.commit();
-            connection.setAutoCommit(true);
+            Object idObject = sqlExecutor.execUpdate(sql, connection, statement -> fillFieldsForCreate(statement, object));
+            id = (ID) idObject;
         } catch (SQLException e) {
             throw new DBException(e);
         }
@@ -79,14 +82,11 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
     @Override
     public T read(ID id) {
         List<T> list;
+        checkName(getTableName());
+        checkName(getColumnId());
         String sql = String.format("SELECT * FROM %s WHERE %s = ?", getTableName(), getColumnId());
         try (Connection connection = connectionFactory.getConnection()) {
-            list = sqlExecutor.execQuery(sql, connection, mapper, new FillerStatement() {
-                @Override
-                public void fillStatement(PreparedStatement statement) throws SQLException {
-                    statement.setObject(1, id);
-                }
-            });
+            list = sqlExecutor.execQuery(sql, connection, mapper, statement -> statement.setObject(1, id));
         } catch (SQLException e) {
             throw new DBException(e);
         }
@@ -101,14 +101,12 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
 
     @Override
     public void update(T object) {
+        checkName(getTableName());
+        checkName(getColumnId());
+        checkName(getColumnValue());
         String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", getTableName(), getColumnValue(), getColumnId());
         try (Connection connection = connectionFactory.getConnection()) {
-            sqlExecutor.execUpdate(sql, connection, new FillerStatement() {
-                @Override
-                public void fillStatement(PreparedStatement statement) throws SQLException {
-                    fillFieldsForUpdate(statement, object);
-                }
-            });
+            sqlExecutor.execUpdate(sql, connection, statement -> fillFieldsForUpdate(statement, object));
 
         } catch (SQLException ex) {
             throw new DBException(ex);
@@ -117,14 +115,11 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
 
     @Override
     public void delete(T object) {
+        checkName(getTableName());
+        checkName(getColumnId());
         String sql = String.format("DELETE FROM %s where %s = ?", getTableName(), getColumnId());
         try (Connection connection = connectionFactory.getConnection()) {
-            sqlExecutor.execUpdate(sql, connection, new FillerStatement() {
-                @Override
-                public void fillStatement(PreparedStatement statement) throws SQLException {
-                    statement.setObject(1, object.getId());
-                }
-            });
+            sqlExecutor.execUpdate(sql, connection, statement -> statement.setObject(1, object.getId()));
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
@@ -134,6 +129,7 @@ abstract class AbstractDAO<T extends Identifiable<ID>, ID extends Serializable> 
     @Override
     public List<T> getAll() {
         List<T> list;
+        checkName(getTableName());
         String sql = String.format("SELECT * FROM %s", getTableName());
         try (Connection connection = connectionFactory.getConnection()) {
             list = sqlExecutor.execQuery(sql, connection, mapper, null);
