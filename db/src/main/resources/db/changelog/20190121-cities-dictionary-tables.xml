@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="20190121-add-country-table" author="chibisov">
-        <comment>Создание таблицы country</comment>
+        <comment>Добавлена возможность хранения стран</comment>
 
         <createTable tableName="country" remarks="Страна">
             <column name="country_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
@@ -19,7 +19,7 @@
     </changeSet>
 
     <changeSet id="20190121-add-region-table" author="chibisov">
-        <comment>Создание таблицы region</comment>
+        <comment>Добавлена возможность хранения регионов</comment>
 
         <createTable tableName="region" remarks="Регион">
             <column name="region_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
@@ -41,7 +41,7 @@
     </changeSet>
 
     <changeSet id="20190121-add-mayor-table" author="chibisov">
-        <comment>Создание таблицы mayor</comment>
+        <comment>Добавлена возможность хранения мэров</comment>
 
         <createTable tableName="mayor" remarks="Мэр">
             <column name="mayor_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
@@ -54,7 +54,7 @@
     </changeSet>
 
     <changeSet id="20190121-add-city-table" author="chibisov">
-        <comment>Создание таблицы city</comment>
+        <comment>Добавлена возможность хранения городов</comment>
 
         <createTable tableName="city" remarks="Город">
             <column name="city_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
@@ -83,10 +83,10 @@
                              constraintName="unique_city_in_region"/>
     </changeSet>
 
-    <changeSet id="20190121-add-attributetype-table" author="chibisov">
-        <comment>Создание таблицы attributetype</comment>
+    <changeSet id="20190121-add-attribute_type-table" author="chibisov">
+        <comment>Добавлена возможность хранения типов аттрибутов</comment>
 
-        <createTable tableName="attributetype" remarks="Тип аттрибута">
+        <createTable tableName="attribute_type" remarks="Тип аттрибута">
             <column name="attribute_type_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -97,7 +97,7 @@
     </changeSet>
 
     <changeSet id="20190121-add-attribute-table" author="chibisov">
-        <comment>Создание таблицы attribute</comment>
+        <comment>Добавлена возможность хранения аттрибутов</comment>
 
         <createTable tableName="attribute" remarks="Аттрибут">
             <column name="attribute_id" type="bigint" autoIncrement="true" remarks="Первичный ключ">
@@ -116,13 +116,13 @@
 
         <addForeignKeyConstraint baseTableName="attribute"
                                  baseColumnNames="attribute_type_id"
-                                 constraintName="fk_attribute_attributetype_id"
-                                 referencedTableName="attributetype"
+                                 constraintName="fk_attribute_attribute_type_id"
+                                 referencedTableName="attribute_type"
                                  referencedColumnNames="attribute_type_id"/>
     </changeSet>
 
     <changeSet id="20190121-add-city_attribute-table" author="chibisov">
-        <comment>Создание таблицы city_attribute</comment>
+        <comment>Добавлена возможность хранения аттрибутов городов</comment>
 
         <createTable tableName="city_attribute" remarks="Линковочная таблица между city и attrubute">
             <column name="city_id" type="bigint" remarks="Город">
