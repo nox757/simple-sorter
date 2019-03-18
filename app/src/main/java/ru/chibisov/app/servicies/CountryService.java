@@ -1,14 +1,14 @@
 package ru.chibisov.app.servicies;
 
-import entities.Country;
+import ru.chibisov.app.dto.CountryDTO;
 
 import java.util.List;
 
 public interface CountryService {
 
-    List<Country> getAll();
-    Country getById(Long id);
-    void update(Country country);
-    Country create(Country country);
-    void delete(Country country);
+    List<CountryDTO> getAll();
+    CountryDTO getById(Long id);
+    CountryDTO update(CountryDTO country);
+    CountryDTO create(CountryDTO country);
+    void delete(CountryDTO country);
 }

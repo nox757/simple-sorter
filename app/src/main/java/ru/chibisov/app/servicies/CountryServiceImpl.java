@@ -2,11 +2,16 @@ package ru.chibisov.app.servicies;
 
 import dai.CountryDao;
 import entities.Country;
+import ru.chibisov.app.dto.CountryDTO;
+import ru.chibisov.app.dto.mapper.CountryMapperDTO;
+import ru.chibisov.app.dto.mapper.MapperDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CountryServiceImpl implements CountryService {
 
+    private static final CountryMapperDTO mapperDTO = new CountryMapperDTO();
     private CountryDao countryDao;
 
     public CountryServiceImpl(CountryDao dao) {
@@ -14,28 +19,45 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public List<Country> getAll() {
-        return countryDao.getAll();
+    public List<CountryDTO> getAll() {
+        List<Country> countries = countryDao.getAll();
+        if (countries == null) {
+            return null;
+        }
+        List<CountryDTO> countryDtos = new ArrayList<>();
+        for (Country country : countries) {
+            countryDtos.add(mapperDTO.mapToDto(country));
+        }
+        return countryDtos;
     }
 
     @Override
-    public Country getById(Long id) {
-        return countryDao.read(id);
+    public CountryDTO getById(Long id) {
+        Country country = countryDao.read(id);
+        if (country == null) {
+            return null;
+        }
+        return mapperDTO.mapToDto(countryDao.read(id));
     }
 
     @Override
-    public void update(Country country) {
-        countryDao.update(country);
+    public CountryDTO update(CountryDTO country) {
+        Country countryEntity = mapperDTO.mapFromDto(country);
+        countryEntity.setVersion(countryDao.read(country.getId()).getVersion());
+        countryDao.update(countryEntity);
+        return mapperDTO.mapToDto(countryDao.read(country.getId()));
     }
 
     @Override
-    public Country create(Country country) {
-        Long id = countryDao.create(country);
-        return countryDao.read(id);
+    public CountryDTO create(CountryDTO country) {
+        Long id = countryDao.create(mapperDTO.mapFromDto(country));
+        return mapperDTO.mapToDto(countryDao.read(id));
     }
 
     @Override
-    public void delete(Country country) {
-        countryDao.delete(country);
+    public void delete(CountryDTO country) {
+        Country countryEntity = mapperDTO.mapFromDto(country);
+        countryEntity.setVersion(countryDao.read(country.getId()).getVersion());
+        countryDao.delete(countryEntity);
     }
 }
