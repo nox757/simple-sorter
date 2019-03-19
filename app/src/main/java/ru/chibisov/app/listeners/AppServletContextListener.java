@@ -6,12 +6,27 @@ import entities.City;
 import entities.Country;
 import entities.Mayor;
 import entities.Region;
+import hibernate.dao.AttributeCityDaoImpl;
+import hibernate.dao.AttributeTypeDaoImpl;
+import hibernate.dao.CityDaoImpl;
 import hibernate.dao.CountryDaoImpl;
+import hibernate.dao.MayorDaoImpl;
+import hibernate.dao.RegionDaoImpl;
 import hibernate.util.HibernateSessionEx;
 import hibernate.util.HibernateUtil;
 import org.hibernate.SessionFactory;
+import ru.chibisov.app.servicies.AttributeService;
+import ru.chibisov.app.servicies.AttributeTypeService;
+import ru.chibisov.app.servicies.CityService;
 import ru.chibisov.app.servicies.CountryService;
-import ru.chibisov.app.servicies.CountryServiceImpl;
+import ru.chibisov.app.servicies.MayorService;
+import ru.chibisov.app.servicies.RegionService;
+import ru.chibisov.app.servicies.impl.AttributeServiceImpl;
+import ru.chibisov.app.servicies.impl.AttributeTypeServiceImpl;
+import ru.chibisov.app.servicies.impl.CityServiceImpl;
+import ru.chibisov.app.servicies.impl.CountryServiceImpl;
+import ru.chibisov.app.servicies.impl.MayorServiceImpl;
+import ru.chibisov.app.servicies.impl.RegionServiceImpl;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -35,7 +50,17 @@ public class AppServletContextListener implements ServletContextListener {
             ServletContext servletContext = servletContextEvent.getServletContext();
             SessionFactory sessionFactory = initSessionFactory();
             CountryService countryService = new CountryServiceImpl(new CountryDaoImpl(sessionFactory));
+            RegionService regionService = new RegionServiceImpl(new RegionDaoImpl(sessionFactory));
+            CityService cityService = new CityServiceImpl(new CityDaoImpl(sessionFactory));
+            MayorService mayorService = new MayorServiceImpl(new MayorDaoImpl(sessionFactory));
+            AttributeService attributeService = new AttributeServiceImpl(new AttributeCityDaoImpl(sessionFactory));
+            AttributeTypeService attributeTypeService = new AttributeTypeServiceImpl(new AttributeTypeDaoImpl(sessionFactory));
             servletContext.setAttribute("countryService", countryService);
+            servletContext.setAttribute("regionService", regionService);
+            servletContext.setAttribute("cityService", cityService);
+            servletContext.setAttribute("mayorService", mayorService);
+            servletContext.setAttribute("attributeService", attributeService);
+            servletContext.setAttribute("attributeTypeService", attributeTypeService);
         } catch (HibernateSessionEx ex) {
             ex.printStackTrace();
         }

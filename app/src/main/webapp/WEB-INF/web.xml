@@ -14,11 +14,54 @@
         <servlet-name>CountryServlet</servlet-name>
         <servlet-class>ru.chibisov.app.servlets.CountryServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>CountryServlet</servlet-name>
         <url-pattern>/countries/*</url-pattern>
+    </servlet-mapping>
 
+    <servlet>
+        <servlet-name>RegionServlet</servlet-name>
+        <servlet-class>ru.chibisov.app.servlets.RegionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegionServlet</servlet-name>
+        <url-pattern>/regions/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CityServlet</servlet-name>
+        <servlet-class>ru.chibisov.app.servlets.CityServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CityServlet</servlet-name>
+        <url-pattern>/cities/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MayorServlet</servlet-name>
+        <servlet-class>ru.chibisov.app.servlets.MayorServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MayorServlet</servlet-name>
+        <url-pattern>/mayors/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AttributeServlet</servlet-name>
+        <servlet-class>ru.chibisov.app.servlets.AttributeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AttributeServlet</servlet-name>
+        <url-pattern>/attributes/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AttributeTypeServlet</servlet-name>
+        <servlet-class>ru.chibisov.app.servlets.AttributeTypeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AttributeTypeServlet</servlet-name>
+        <url-pattern>/attributetypes/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

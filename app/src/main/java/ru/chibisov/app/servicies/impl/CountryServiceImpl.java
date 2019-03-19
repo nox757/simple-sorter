@@ -1,10 +1,10 @@
-package ru.chibisov.app.servicies;
+package ru.chibisov.app.servicies.impl;
 
 import dai.CountryDao;
 import entities.Country;
 import ru.chibisov.app.dto.CountryDTO;
 import ru.chibisov.app.dto.mapper.CountryMapperDTO;
-import ru.chibisov.app.dto.mapper.MapperDTO;
+import ru.chibisov.app.servicies.CountryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class CountryServiceImpl implements CountryService {
         if (country == null) {
             return null;
         }
-        return mapperDTO.mapToDto(countryDao.read(id));
+        return mapperDTO.mapToDto(country);
     }
 
     @Override

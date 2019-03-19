@@ -1,8 +1,8 @@
 package ru.chibisov.app.servlets;
 
 import com.google.gson.Gson;
-import ru.chibisov.app.dto.CountryDTO;
-import ru.chibisov.app.servicies.CountryService;
+import ru.chibisov.app.dto.RegionDTO;
+import ru.chibisov.app.servicies.RegionService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,15 +13,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class CountryServlet extends HttpServlet {
+public class RegionServlet extends HttpServlet {
 
-    private CountryService countryService;
+    private RegionService regionService;
     private Gson gson;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        countryService = (CountryService) getServletContext().getAttribute("countryService");
+        regionService = (RegionService) getServletContext().getAttribute("regionService");
         gson = new Gson();
     }
 
@@ -32,7 +32,7 @@ public class CountryServlet extends HttpServlet {
         String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
         if (subPaths == null || subPaths.length == 0) {
             try (PrintWriter writer = resp.getWriter()) {
-                List<CountryDTO> countries = countryService.getAll();
+                List<RegionDTO> countries = regionService.getAll();
                 writer.println(gson.toJson(countries));
                 resp.setStatus(HttpServletResponse.SC_OK);
                 return;
@@ -41,13 +41,13 @@ public class CountryServlet extends HttpServlet {
             }
         }
         if (subPaths.length == 2) {
-            Long countryId = Long.valueOf(subPaths[1]);
+            Long regionId = Long.valueOf(subPaths[1]);
             try (PrintWriter writer = resp.getWriter()) {
-                CountryDTO country = countryService.getById(countryId);
-                if (country == null) {
+                RegionDTO region = regionService.getById(regionId);
+                if (region == null) {
                     return;
                 }
-                writer.println(gson.toJson(country));
+                writer.println(gson.toJson(region));
                 resp.setStatus(HttpServletResponse.SC_OK);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -60,15 +60,15 @@ public class CountryServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         String jsonString = ServletUtil.getRequestBody(req);
-        if(jsonString == null || jsonString.isEmpty()) {
+        if (jsonString == null || jsonString.isEmpty()) {
             return;
         }
         String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
         if (subPaths == null || subPaths.length == 0) {
             try (PrintWriter writer = resp.getWriter()) {
-                CountryDTO country = gson.fromJson(jsonString, CountryDTO.class);
-                country = countryService.create(country);
-                writer.println(gson.toJson(country));
+                RegionDTO region = gson.fromJson(jsonString, RegionDTO.class);
+                region = regionService.create(region);
+                writer.println(gson.toJson(region));
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -81,17 +81,17 @@ public class CountryServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         String jsonString = ServletUtil.getRequestBody(req);
-        if(jsonString == null || jsonString.isEmpty()) {
+        if (jsonString == null || jsonString.isEmpty()) {
             return;
         }
         String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
         if (subPaths.length == 2) {
             try (PrintWriter writer = resp.getWriter()) {
-                Long countryId = Long.valueOf(subPaths[1]);
-                CountryDTO country = gson.fromJson(jsonString, CountryDTO.class);
-                country.setId(countryId);
-                country = countryService.update(country);
-                writer.println(gson.toJson(country));
+                Long regionId = Long.valueOf(subPaths[1]);
+                RegionDTO region = gson.fromJson(jsonString, RegionDTO.class);
+                region.setId(regionId);
+                region = regionService.update(region);
+                writer.println(gson.toJson(region));
                 resp.setStatus(HttpServletResponse.SC_OK);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -106,10 +106,10 @@ public class CountryServlet extends HttpServlet {
         String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
         if (subPaths.length == 2) {
             try (PrintWriter writer = resp.getWriter()) {
-                Long countryId = Long.valueOf(subPaths[1]);
-                CountryDTO country = new CountryDTO();
-                country.setId(countryId);
-                countryService.delete(country);
+                Long regionId = Long.valueOf(subPaths[1]);
+                RegionDTO region = new RegionDTO();
+                region.setId(regionId);
+                regionService.delete(region);
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
             } catch (Exception e) {
                 e.printStackTrace();

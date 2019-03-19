@@ -2,11 +2,9 @@ package ru.chibisov.app.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+public class AttributeTypeDTO {
 
-public class CountryDTO implements Serializable {
-
-    @SerializedName("country_id")
+    @SerializedName("attribute_type_id")
     private Long id;
 
     private String name;
@@ -15,7 +13,7 @@ public class CountryDTO implements Serializable {
         return id;
     }
 
-    public CountryDTO setId(Long id) {
+    public AttributeTypeDTO setId(Long id) {
         this.id = id;
         return this;
     }
@@ -24,9 +22,8 @@ public class CountryDTO implements Serializable {
         return name;
     }
 
-    public CountryDTO setName(String name) {
+    public AttributeTypeDTO setName(String name) {
         this.name = name;
         return this;
     }
-
 }
