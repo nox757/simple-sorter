@@ -13,7 +13,6 @@ public class RegionServiceImpl implements RegionService {
 
     private static final RegionMapperDTO mapperDTO = new RegionMapperDTO();
     private RegionDao regionDao;
-//    private CountryDao countryDao;
 
     public RegionServiceImpl(RegionDao regionDao) {
         this.regionDao = regionDao;

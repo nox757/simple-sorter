@@ -53,4 +53,19 @@ public class Mayor implements Identifiable<Long> {
     public void setCity(City city) {
         this.city = city;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Mayor mayor = (Mayor) o;
+
+        return id != null ? id.equals(mayor.id) : mayor.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

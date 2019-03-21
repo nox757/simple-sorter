@@ -1,5 +1,6 @@
 package ru.chibisov.app.listeners;
 
+import dai.MayorDao;
 import entities.AttributeCity;
 import entities.AttributeType;
 import entities.City;
@@ -51,7 +52,7 @@ public class AppServletContextListener implements ServletContextListener {
             SessionFactory sessionFactory = initSessionFactory();
             CountryService countryService = new CountryServiceImpl(new CountryDaoImpl(sessionFactory));
             RegionService regionService = new RegionServiceImpl(new RegionDaoImpl(sessionFactory));
-            CityService cityService = new CityServiceImpl(new CityDaoImpl(sessionFactory));
+            CityService cityService = new CityServiceImpl(new CityDaoImpl(sessionFactory), new MayorDaoImpl(sessionFactory));
             MayorService mayorService = new MayorServiceImpl(new MayorDaoImpl(sessionFactory));
             AttributeService attributeService = new AttributeServiceImpl(new AttributeCityDaoImpl(sessionFactory));
             AttributeTypeService attributeTypeService = new AttributeTypeServiceImpl(new AttributeTypeDaoImpl(sessionFactory));

@@ -7,9 +7,9 @@ import ru.chibisov.app.dto.MayorDTO;
 public class MayorMapperDTO implements MapperDTO<Mayor, MayorDTO> {
     @Override
     public MayorDTO mapToDto(Mayor entity) {
-        return new MayorDTO().setCityId(entity.getId())
+        return new MayorDTO().setId(entity.getId())
                 .setFio(entity.getFio())
-                .setCityId(entity.getCity().getId());
+                .setCityId(entity.getCity() == null ? null : entity.getCity().getId());
     }
 
     @Override
