@@ -22,6 +22,7 @@ public class AttributeMapperDTO implements MapperDTO<AttributeCity, AttributeDTO
 
         AttributeType attributeType = new AttributeType();
         attributeType.setId(dto.getAttributeType());
+        attributeCity.setAttributeType(attributeType);
         return attributeCity;
     }
 }

@@ -32,11 +32,11 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<CityDTO> getAll() {
         List<City> cities = cityDao.getAll();
-        if(cities == null) {
+        if (cities == null) {
             return null;
         }
         List<CityDTO> cityDtos = new ArrayList<>();
-        for(City city : cities) {
+        for (City city : cities) {
             cityDtos.add(mapperDTO.mapToDto(city));
         }
         return cityDtos;
@@ -45,7 +45,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDTO getById(Long id) {
         City city = cityDao.read(id);
-        if(city == null) {
+        if (city == null) {
             return null;
         }
         return mapperDTO.mapToDto(city);
@@ -54,9 +54,15 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDTO update(CityDTO city) {
         City cityEntity = mapperDTO.mapFromDto(city);
-        if(city.getMayor() != null) { //todo: разобраться с мэром
-            cityEntity.setMayor(mayorDao.read(city.getId()));
+
+        //Method should don't update
+        if (city.getMayor() != null) {
+            Mayor mayor = mayorDao.read(city.getId());
+            mayor.setCity(cityEntity);
+            cityEntity.setMayor(mayor);
         }
+        //Attributes don't update
+        cityEntity.setAttributes(cityDao.read(city.getId()).getAttributes());
         cityDao.update(cityEntity);
         return mapperDTO.mapToDto(cityDao.read(city.getId()));
     }
@@ -76,11 +82,11 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<AttributeDTO> getCityAttributes(Long id) {
         List<AttributeCity> attributes = cityDao.read(id).getAttributes();
-        if(attributes == null) {
+        if (attributes == null) {
             return null;
         }
         List<AttributeDTO> attributeDtos = new ArrayList<>();
-        for(AttributeCity attribute : attributes) {
+        for (AttributeCity attribute : attributes) {
             attributeDtos.add(attributeMapperDTO.mapToDto(attribute));
         }
         return attributeDtos;

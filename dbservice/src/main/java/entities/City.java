@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.List;
 
 @Entity
@@ -31,7 +32,8 @@ public class City implements Identifiable<Long> {
     @Column(name = "name")
     private String name;
 
-    @OneToOne
+    @OneToOne(cascade ={CascadeType.ALL},
+            fetch = FetchType.LAZY)
     @JoinColumn(name = "mayor_id")
     private Mayor mayor;
 
@@ -87,5 +89,20 @@ public class City implements Identifiable<Long> {
 
     public void setRegion(Region region) {
         this.region = region;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        City city = (City) o;
+
+        return id.equals(city.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
