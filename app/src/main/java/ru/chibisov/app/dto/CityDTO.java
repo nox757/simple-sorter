@@ -18,7 +18,7 @@ public class CityDTO implements Serializable {
     @SerializedName("region_id")
     private Long region;
 
-    @SerializedName("attributes")
+    @SerializedName("attribute_ids")
     private List<Long> attributes;
 
     public Long getId() {

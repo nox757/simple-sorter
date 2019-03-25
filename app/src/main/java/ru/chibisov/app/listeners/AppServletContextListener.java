@@ -1,6 +1,5 @@
 package ru.chibisov.app.listeners;
 
-import dai.MayorDao;
 import entities.AttributeCity;
 import entities.AttributeType;
 import entities.City;

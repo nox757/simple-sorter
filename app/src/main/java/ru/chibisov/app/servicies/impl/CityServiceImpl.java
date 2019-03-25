@@ -55,12 +55,6 @@ public class CityServiceImpl implements CityService {
     public CityDTO update(CityDTO city) {
         City cityEntity = mapperDTO.mapFromDto(city);
 
-        //Method should don't update
-        if (city.getMayor() != null) {
-            Mayor mayor = mayorDao.read(city.getId());
-            mayor.setCity(cityEntity);
-            cityEntity.setMayor(mayor);
-        }
         //Attributes don't update
         cityEntity.setAttributes(cityDao.read(city.getId()).getAttributes());
         cityDao.update(cityEntity);

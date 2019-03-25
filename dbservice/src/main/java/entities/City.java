@@ -25,27 +25,26 @@ public class City implements Identifiable<Long> {
 
     @Id
     @Column(name = "city_id")
-    @SequenceGenerator(name="city_seq", sequenceName="city_city_id_seq", allocationSize=1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="city_seq")
+    @SequenceGenerator(name = "city_seq", sequenceName = "city_city_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "city_seq")
     private Long id;
 
     @Column(name = "name")
     private String name;
 
-    @OneToOne(cascade ={CascadeType.ALL},
-            fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mayor_id")
     private Mayor mayor;
 
     @ManyToMany(fetch = FetchType.LAZY,
-            cascade ={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "city_attribute",
             joinColumns = @JoinColumn(name = "city_id"),
             inverseJoinColumns = @JoinColumn(name = "attribute_id"))
     private List<AttributeCity> attributes;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="region_id")
+    @JoinColumn(name = "region_id")
     private Region region;
 
     public City() {

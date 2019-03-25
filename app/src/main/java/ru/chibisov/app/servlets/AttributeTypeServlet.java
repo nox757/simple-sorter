@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class AttributeTypeServlet extends HttpServlet {
+public class AttributeTypeServlet extends AbstractApiServlet {
 
     private AttributeTypeService attributeTypeService;
     private Gson gson;
@@ -61,7 +61,7 @@ public class AttributeTypeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        String jsonString = ServletUtil.getRequestBody(req);
+        String jsonString = getRequestBody(req);
         if (jsonString == null || jsonString.isEmpty()) {
             return;
         }
@@ -82,7 +82,7 @@ public class AttributeTypeServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        String jsonString = ServletUtil.getRequestBody(req);
+        String jsonString = getRequestBody(req);
         if (jsonString == null || jsonString.isEmpty()) {
             return;
         }

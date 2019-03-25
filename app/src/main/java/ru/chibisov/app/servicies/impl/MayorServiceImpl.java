@@ -43,6 +43,7 @@ public class MayorServiceImpl implements MayorService {
     @Override
     public MayorDTO update(MayorDTO mayor) {
         Mayor mayorEntity = mapperDTO.mapFromDto(mayor);
+        mayorEntity.setVersion(mayorDao.read(mayor.getId()).getVersion());
         mayorDao.update(mayorEntity);
         return mapperDTO.mapToDto(mayorDao.read(mayor.getId()));
     }
