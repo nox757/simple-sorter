@@ -1,119 +1,116 @@
 package ru.chibisov.app.servlets;
 
-import com.google.gson.Gson;
 import ru.chibisov.app.dto.CountryDTO;
 import ru.chibisov.app.servicies.CountryService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class CountryServlet extends HttpServlet {
+public class CountryServlet extends AbstractApiServlet {
 
     private CountryService countryService;
-    private Gson gson;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         countryService = (CountryService) getServletContext().getAttribute("countryService");
-        gson = new Gson();
+        fillGetRequestMap();
+        fillPostRequestMap();
+        fillPutRequestMap();
+        fillDeleteRequestMap();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths == null || subPaths.length == 0) {
-            try (PrintWriter writer = resp.getWriter()) {
-                List<CountryDTO> countries = countryService.getAll();
-                writer.println(gson.toJson(countries));
-                resp.setStatus(HttpServletResponse.SC_OK);
-                return;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if (subPaths.length == 2) {
-            Long countryId = Long.valueOf(subPaths[1]);
-            try (PrintWriter writer = resp.getWriter()) {
-                CountryDTO country = countryService.getById(countryId);
-                if (country == null) {
-                    return;
-                }
-                writer.println(gson.toJson(country));
-                resp.setStatus(HttpServletResponse.SC_OK);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        handlerDoGet(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        String jsonString = ServletUtil.getRequestBody(req);
-        if(jsonString == null || jsonString.isEmpty()) {
-            return;
-        }
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths == null || subPaths.length == 0) {
-            try (PrintWriter writer = resp.getWriter()) {
-                CountryDTO country = gson.fromJson(jsonString, CountryDTO.class);
-                country = countryService.create(country);
-                writer.println(gson.toJson(country));
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        handlerDoPost(req, resp);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        String jsonString = ServletUtil.getRequestBody(req);
-        if(jsonString == null || jsonString.isEmpty()) {
-            return;
-        }
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths.length == 2) {
-            try (PrintWriter writer = resp.getWriter()) {
-                Long countryId = Long.valueOf(subPaths[1]);
-                CountryDTO country = gson.fromJson(jsonString, CountryDTO.class);
-                country.setId(countryId);
-                country = countryService.update(country);
-                writer.println(gson.toJson(country));
-                resp.setStatus(HttpServletResponse.SC_OK);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        handlerDoPut(req, resp);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths.length == 2) {
-            try (PrintWriter writer = resp.getWriter()) {
-                Long countryId = Long.valueOf(subPaths[1]);
-                CountryDTO country = new CountryDTO();
-                country.setId(countryId);
-                countryService.delete(country);
-                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            } catch (Exception e) {
-                e.printStackTrace();
+        handlerDoDelete(req, resp);
+    }
+
+    /**
+     * Fill Map of method to execute GET by path:
+     * - "/"
+     * - "/{id}"
+     */
+    public void fillGetRequestMap() {
+        pathGetMap = new ConcurrentHashMap<>();
+        pathGetMap.put("^/$",
+                (vars, resp) -> printJsonToResp(resp, () -> countryService.getAll())
+        );
+        pathGetMap.put("^/([0-9]+)/?$",
+                (vars, resp) -> {
+                    Long countryId = Long.valueOf(vars.get("URL_1"));
+                    printJsonToResp(resp, () -> countryService.getById(countryId));
+                }
+        );
+    }
+
+    /**
+     * Fill Map of method to execute Post by path:
+     * - "/"
+     */
+    public void fillPostRequestMap() {
+        pathPostMap = new ConcurrentHashMap<>();
+        pathPostMap.put("^/$", (vars, resp) -> {
+            String json = vars.get("JSON");
+            if (json == null || json.isEmpty()) {
+                return;
             }
-        }
+            printJsonToResp(resp, () -> {
+                CountryDTO country = gson.fromJson(json, CountryDTO.class);
+                return countryService.create(country);
+            });
+        });
+    }
+
+    /**
+     * Fill Map of method to execute Put by path:
+     * - "/{id}"
+     */
+    public void fillPutRequestMap() {
+        pathPutMap = new ConcurrentHashMap<>();
+        pathPutMap.put("^/([0-9]+)/?$", (vars, resp) -> {
+            String json = vars.get("JSON");
+            if (json == null || json.isEmpty()) {
+                return;
+            }
+            printJsonToResp(resp, () -> {
+                CountryDTO country = gson.fromJson(json, CountryDTO.class);
+                Long countryId = Long.valueOf(vars.get("URL_1"));
+                country.setId(countryId);
+                return countryService.update(country);
+            });
+        });
+    }
+
+    /**
+     * Fill Map of method to execute Delete by path:
+     * - "/{id}"
+     */
+    public void fillDeleteRequestMap() {
+        pathDeleteMap = new ConcurrentHashMap<>();
+        pathDeleteMap.put("^/([0-9]+)/?$", (vars, resp) -> {
+            CountryDTO country = new CountryDTO();
+            Long countryId = Long.valueOf(vars.get("URL_1"));
+            country.setId(countryId);
+            countryService.delete(country);
+        });
     }
 }

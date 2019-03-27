@@ -1,119 +1,116 @@
 package ru.chibisov.app.servlets;
 
-import com.google.gson.Gson;
 import ru.chibisov.app.dto.AttributeDTO;
 import ru.chibisov.app.servicies.AttributeService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class AttributeServlet extends HttpServlet {
+public class AttributeServlet extends AbstractApiServlet {
 
     private AttributeService attributeService;
-    private Gson gson;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         attributeService = (AttributeService) getServletContext().getAttribute("attributeService");
-        gson = new Gson();
+        fillGetRequestMap();
+        fillPostRequestMap();
+        fillPutRequestMap();
+        fillDeleteRequestMap();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths == null || subPaths.length == 0) {
-            try (PrintWriter writer = resp.getWriter()) {
-                List<AttributeDTO> attributes = attributeService.getAll();
-                writer.println(gson.toJson(attributes));
-                resp.setStatus(HttpServletResponse.SC_OK);
-                return;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if (subPaths.length == 2) {
-            Long attributeId = Long.valueOf(subPaths[1]);
-            try (PrintWriter writer = resp.getWriter()) {
-                AttributeDTO attribute = attributeService.getById(attributeId);
-                if (attribute == null) {
-                    return;
-                }
-                writer.println(gson.toJson(attribute));
-                resp.setStatus(HttpServletResponse.SC_OK);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        handlerDoGet(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        String jsonString = ServletUtil.getRequestBody(req);
-        if (jsonString == null || jsonString.isEmpty()) {
-            return;
-        }
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths == null || subPaths.length == 0) {
-            try (PrintWriter writer = resp.getWriter()) {
-                AttributeDTO attribute = gson.fromJson(jsonString, AttributeDTO.class);
-                attribute = attributeService.create(attribute);
-                writer.println(gson.toJson(attribute));
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        handlerDoPost(req, resp);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        String jsonString = ServletUtil.getRequestBody(req);
-        if (jsonString == null || jsonString.isEmpty()) {
-            return;
-        }
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths.length == 2) {
-            try (PrintWriter writer = resp.getWriter()) {
-                Long attributeId = Long.valueOf(subPaths[1]);
-                AttributeDTO attribute = gson.fromJson(jsonString, AttributeDTO.class);
-                attribute.setId(attributeId);
-                attribute = attributeService.update(attribute);
-                writer.println(gson.toJson(attribute));
-                resp.setStatus(HttpServletResponse.SC_OK);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        handlerDoPut(req, resp);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths.length == 2) {
-            try {
-                Long attributeId = Long.valueOf(subPaths[1]);
-                AttributeDTO attribute = new AttributeDTO();
-                attribute.setId(attributeId);
-                attributeService.delete(attribute);
-                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            } catch (Exception e) {
-                e.printStackTrace();
+        handlerDoDelete(req, resp);
+    }
+
+    /**
+     * Fill Map of method to execute GET by path:
+     * - "/"
+     * - "/{id}"
+     */
+    public void fillGetRequestMap() {
+        pathGetMap = new ConcurrentHashMap<>();
+        pathGetMap.put("^/$",
+                (vars, resp) -> printJsonToResp(resp, () -> attributeService.getAll())
+        );
+        pathGetMap.put("^/([0-9]+)/?$",
+                (vars, resp) -> {
+                    Long attributeId = Long.valueOf(vars.get("URL_1"));
+                    printJsonToResp(resp, () -> attributeService.getById(attributeId));
+                }
+        );
+    }
+
+    /**
+     * Fill Map of method to execute Post by path:
+     * - "/"
+     */
+    public void fillPostRequestMap() {
+        pathPostMap = new ConcurrentHashMap<>();
+        pathPostMap.put("^/$", (vars, resp) -> {
+            String json = vars.get("JSON");
+            if (json == null || json.isEmpty()) {
+                return;
             }
-        }
+            printJsonToResp(resp, () -> {
+                AttributeDTO attribute = gson.fromJson(json, AttributeDTO.class);
+                return attributeService.create(attribute);
+            });
+        });
+    }
+
+    /**
+     * Fill Map of method to execute Put by path:
+     * - "/{id}"
+     */
+    public void fillPutRequestMap() {
+        pathPutMap = new ConcurrentHashMap<>();
+        pathPutMap.put("^/([0-9]+)/?$", (vars, resp) -> {
+            String json = vars.get("JSON");
+            if (json == null || json.isEmpty()) {
+                return;
+            }
+            printJsonToResp(resp, () -> {
+                AttributeDTO attribute = gson.fromJson(json, AttributeDTO.class);
+                Long attributeId = Long.valueOf(vars.get("URL_1"));
+                attribute.setId(attributeId);
+                return attributeService.update(attribute);
+            });
+        });
+    }
+
+    /**
+     * Fill Map of method to execute Delete by path:
+     * - "/{id}"
+     */
+    public void fillDeleteRequestMap() {
+        pathDeleteMap = new ConcurrentHashMap<>();
+        pathDeleteMap.put("^/([0-9]+)/?$", (vars, resp) -> {
+            AttributeDTO attribute = new AttributeDTO();
+            Long attributeId = Long.valueOf(vars.get("URL_1"));
+            attribute.setId(attributeId);
+            attributeService.delete(attribute);
+        });
     }
 }

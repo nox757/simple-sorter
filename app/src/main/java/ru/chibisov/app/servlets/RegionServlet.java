@@ -1,119 +1,116 @@
 package ru.chibisov.app.servlets;
 
-import com.google.gson.Gson;
 import ru.chibisov.app.dto.RegionDTO;
 import ru.chibisov.app.servicies.RegionService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class RegionServlet extends HttpServlet {
+public class RegionServlet extends AbstractApiServlet {
 
     private RegionService regionService;
-    private Gson gson;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         regionService = (RegionService) getServletContext().getAttribute("regionService");
-        gson = new Gson();
+        fillGetRequestMap();
+        fillPostRequestMap();
+        fillPutRequestMap();
+        fillDeleteRequestMap();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths == null || subPaths.length == 0) {
-            try (PrintWriter writer = resp.getWriter()) {
-                List<RegionDTO> countries = regionService.getAll();
-                writer.println(gson.toJson(countries));
-                resp.setStatus(HttpServletResponse.SC_OK);
-                return;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if (subPaths.length == 2) {
-            Long regionId = Long.valueOf(subPaths[1]);
-            try (PrintWriter writer = resp.getWriter()) {
-                RegionDTO region = regionService.getById(regionId);
-                if (region == null) {
-                    return;
-                }
-                writer.println(gson.toJson(region));
-                resp.setStatus(HttpServletResponse.SC_OK);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        handlerDoGet(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        String jsonString = ServletUtil.getRequestBody(req);
-        if (jsonString == null || jsonString.isEmpty()) {
-            return;
-        }
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths == null || subPaths.length == 0) {
-            try (PrintWriter writer = resp.getWriter()) {
-                RegionDTO region = gson.fromJson(jsonString, RegionDTO.class);
-                region = regionService.create(region);
-                writer.println(gson.toJson(region));
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        handlerDoPost(req, resp);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        String jsonString = ServletUtil.getRequestBody(req);
-        if (jsonString == null || jsonString.isEmpty()) {
-            return;
-        }
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths.length == 2) {
-            try (PrintWriter writer = resp.getWriter()) {
-                Long regionId = Long.valueOf(subPaths[1]);
-                RegionDTO region = gson.fromJson(jsonString, RegionDTO.class);
-                region.setId(regionId);
-                region = regionService.update(region);
-                writer.println(gson.toJson(region));
-                resp.setStatus(HttpServletResponse.SC_OK);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        handlerDoPut(req, resp);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        String[] subPaths = ServletUtil.getPathParam(req.getPathInfo());
-        if (subPaths.length == 2) {
-            try (PrintWriter writer = resp.getWriter()) {
-                Long regionId = Long.valueOf(subPaths[1]);
-                RegionDTO region = new RegionDTO();
-                region.setId(regionId);
-                regionService.delete(region);
-                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            } catch (Exception e) {
-                e.printStackTrace();
+        handlerDoDelete(req, resp);
+    }
+
+    /**
+     * Fill Map of method to execute GET by path:
+     * - "/"
+     * - "/{id}"
+     */
+    public void fillGetRequestMap() {
+        pathGetMap = new ConcurrentHashMap<>();
+        pathGetMap.put("^/$",
+                (vars, resp) -> printJsonToResp(resp, () -> regionService.getAll())
+        );
+        pathGetMap.put("^/([0-9]+)/?$",
+                (vars, resp) -> {
+                    Long mayorId = Long.valueOf(vars.get("URL_1"));
+                    printJsonToResp(resp, () -> regionService.getById(mayorId));
+                }
+        );
+    }
+
+    /**
+     * Fill Map of method to execute Post by path:
+     * - "/"
+     */
+    public void fillPostRequestMap() {
+        pathPostMap = new ConcurrentHashMap<>();
+        pathPostMap.put("^/$", (vars, resp) -> {
+            String json = vars.get("JSON");
+            if (json == null || json.isEmpty()) {
+                return;
             }
-        }
+            printJsonToResp(resp, () -> {
+                RegionDTO region = gson.fromJson(json, RegionDTO.class);
+                return regionService.create(region);
+            });
+        });
+    }
+
+    /**
+     * Fill Map of method to execute Put by path:
+     * - "/{id}"
+     */
+    public void fillPutRequestMap() {
+        pathPutMap = new ConcurrentHashMap<>();
+        pathPutMap.put("^/([0-9]+)/?$", (vars, resp) -> {
+            String json = vars.get("JSON");
+            if (json == null || json.isEmpty()) {
+                return;
+            }
+            printJsonToResp(resp, () -> {
+                RegionDTO region = gson.fromJson(json, RegionDTO.class);
+                Long mayorId = Long.valueOf(vars.get("URL_1"));
+                region.setId(mayorId);
+                return regionService.update(region);
+            });
+        });
+    }
+
+    /**
+     * Fill Map of method to execute Delete by path:
+     * - "/{id}"
+     */
+    public void fillDeleteRequestMap() {
+        pathDeleteMap = new ConcurrentHashMap<>();
+        pathDeleteMap.put("^/([0-9]+)/?$", (vars, resp) -> {
+            RegionDTO region = new RegionDTO();
+            Long mayorId = Long.valueOf(vars.get("URL_1"));
+            region.setId(mayorId);
+            regionService.delete(region);
+        });
     }
 }
