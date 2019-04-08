@@ -73,6 +73,15 @@ public class CityServiceImpl implements CityService {
         cityDao.delete(cityEntity);
     }
 
+    public CityDTO addCityAttribute(Long cityId, Long attributeId) {
+        City city = cityDao.read(cityId);
+        AttributeCity attribute = new AttributeCity();
+        attribute.setId(attributeId);
+        city.getAttributes().add(attribute);
+        cityDao.update(city);
+        return mapperDTO.mapToDto(cityDao.read(cityId));
+    }
+
     @Override
     public List<AttributeDTO> getCityAttributes(Long id) {
         List<AttributeCity> attributes = cityDao.read(id).getAttributes();

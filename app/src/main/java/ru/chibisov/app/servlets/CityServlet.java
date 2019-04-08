@@ -105,6 +105,13 @@ public class CityServlet extends AbstractApiServlet {
                 return cityService.update(city);
             });
         });
+        pathPutMap.put("/([0-9]+)/attributes/([0-9]+)/?$", (vars, resp) -> {
+            printJsonToResp(resp, () -> {
+                Long cityId = Long.valueOf(vars.get("URL_1"));
+                Long attributeId = Long.valueOf(vars.get("URL_2"));
+                return cityService.addCityAttribute(cityId, attributeId);
+            });
+        });
     }
 
     /**
