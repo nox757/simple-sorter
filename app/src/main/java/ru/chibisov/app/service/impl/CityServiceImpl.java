@@ -1,18 +1,15 @@
-package ru.chibisov.app.servicies.impl;
+package ru.chibisov.app.service.impl;
 
 import dai.CityDao;
 import dai.MayorDao;
 import entities.AttributeCity;
 import entities.City;
-import entities.Mayor;
 import ru.chibisov.app.dto.AttributeDTO;
 import ru.chibisov.app.dto.CityDTO;
 import ru.chibisov.app.dto.mapper.AttributeMapperDTO;
 import ru.chibisov.app.dto.mapper.CityMapperDTO;
-import ru.chibisov.app.servicies.AttributeService;
-import ru.chibisov.app.servicies.CityService;
+import ru.chibisov.app.service.CityService;
 
-import javax.xml.stream.events.Attribute;
 import java.util.ArrayList;
 import java.util.List;
 

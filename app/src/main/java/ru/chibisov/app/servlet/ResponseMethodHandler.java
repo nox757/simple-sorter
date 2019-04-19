@@ -1,4 +1,4 @@
-package ru.chibisov.app.servlets;
+package ru.chibisov.app.servlet;
 
 
 import javax.servlet.http.HttpServletResponse;

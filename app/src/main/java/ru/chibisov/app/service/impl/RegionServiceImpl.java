@@ -1,10 +1,10 @@
-package ru.chibisov.app.servicies.impl;
+package ru.chibisov.app.service.impl;
 
 import dai.RegionDao;
 import entities.Region;
 import ru.chibisov.app.dto.RegionDTO;
 import ru.chibisov.app.dto.mapper.RegionMapperDTO;
-import ru.chibisov.app.servicies.RegionService;
+import ru.chibisov.app.service.RegionService;
 
 import java.util.ArrayList;
 import java.util.List;

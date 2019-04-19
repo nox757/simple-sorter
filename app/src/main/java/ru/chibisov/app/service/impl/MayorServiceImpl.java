@@ -1,10 +1,10 @@
-package ru.chibisov.app.servicies.impl;
+package ru.chibisov.app.service.impl;
 
 import dai.MayorDao;
 import entities.Mayor;
 import ru.chibisov.app.dto.MayorDTO;
 import ru.chibisov.app.dto.mapper.MayorMapperDTO;
-import ru.chibisov.app.servicies.MayorService;
+import ru.chibisov.app.service.MayorService;
 
 import java.util.ArrayList;
 import java.util.List;

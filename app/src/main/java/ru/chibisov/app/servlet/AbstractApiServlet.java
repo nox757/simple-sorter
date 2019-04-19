@@ -1,4 +1,4 @@
-package ru.chibisov.app.servlets;
+package ru.chibisov.app.servlet;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

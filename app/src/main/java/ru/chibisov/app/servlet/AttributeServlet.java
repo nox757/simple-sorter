@@ -1,7 +1,7 @@
-package ru.chibisov.app.servlets;
+package ru.chibisov.app.servlet;
 
-import ru.chibisov.app.dto.CountryDTO;
-import ru.chibisov.app.servicies.CountryService;
+import ru.chibisov.app.dto.AttributeDTO;
+import ru.chibisov.app.service.AttributeService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -10,14 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CountryServlet extends AbstractApiServlet {
+public class AttributeServlet extends AbstractApiServlet {
 
-    private CountryService countryService;
+    private AttributeService attributeService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        countryService = (CountryService) getServletContext().getAttribute("countryService");
+        attributeService = (AttributeService) getServletContext().getAttribute("attributeService");
         fillGetRequestMap();
         fillPostRequestMap();
         fillPutRequestMap();
@@ -52,12 +52,12 @@ public class CountryServlet extends AbstractApiServlet {
     public void fillGetRequestMap() {
         pathGetMap = new ConcurrentHashMap<>();
         pathGetMap.put("^/$",
-                (vars, resp) -> printJsonToResp(resp, () -> countryService.getAll())
+                (vars, resp) -> printJsonToResp(resp, () -> attributeService.getAll())
         );
         pathGetMap.put("^/([0-9]+)/?$",
                 (vars, resp) -> {
-                    Long countryId = Long.valueOf(vars.get("URL_1"));
-                    printJsonToResp(resp, () -> countryService.getById(countryId));
+                    Long attributeId = Long.valueOf(vars.get("URL_1"));
+                    printJsonToResp(resp, () -> attributeService.getById(attributeId));
                 }
         );
     }
@@ -74,8 +74,8 @@ public class CountryServlet extends AbstractApiServlet {
                 return;
             }
             printJsonToResp(resp, () -> {
-                CountryDTO country = gson.fromJson(json, CountryDTO.class);
-                return countryService.create(country);
+                AttributeDTO attribute = gson.fromJson(json, AttributeDTO.class);
+                return attributeService.create(attribute);
             });
         });
     }
@@ -92,10 +92,10 @@ public class CountryServlet extends AbstractApiServlet {
                 return;
             }
             printJsonToResp(resp, () -> {
-                CountryDTO country = gson.fromJson(json, CountryDTO.class);
-                Long countryId = Long.valueOf(vars.get("URL_1"));
-                country.setId(countryId);
-                return countryService.update(country);
+                AttributeDTO attribute = gson.fromJson(json, AttributeDTO.class);
+                Long attributeId = Long.valueOf(vars.get("URL_1"));
+                attribute.setId(attributeId);
+                return attributeService.update(attribute);
             });
         });
     }
@@ -107,10 +107,10 @@ public class CountryServlet extends AbstractApiServlet {
     public void fillDeleteRequestMap() {
         pathDeleteMap = new ConcurrentHashMap<>();
         pathDeleteMap.put("^/([0-9]+)/?$", (vars, resp) -> {
-            CountryDTO country = new CountryDTO();
-            Long countryId = Long.valueOf(vars.get("URL_1"));
-            country.setId(countryId);
-            countryService.delete(country);
+            AttributeDTO attribute = new AttributeDTO();
+            Long attributeId = Long.valueOf(vars.get("URL_1"));
+            attribute.setId(attributeId);
+            attributeService.delete(attribute);
         });
     }
 }

@@ -1,27 +1,23 @@
-package ru.chibisov.app.servlets;
+package ru.chibisov.app.servlet;
 
-import com.google.gson.Gson;
-import ru.chibisov.app.dto.MayorDTO;
-import ru.chibisov.app.servicies.MayorService;
+import ru.chibisov.app.dto.CityDTO;
+import ru.chibisov.app.service.CityService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MayorServlet extends AbstractApiServlet {
+public class CityServlet extends AbstractApiServlet {
 
-    private MayorService mayorService;
-    private Gson gson;
+    private CityService cityService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        mayorService = (MayorService) getServletContext().getAttribute("mayorService");
+        cityService = (CityService) getServletContext().getAttribute("cityService");
         fillGetRequestMap();
         fillPostRequestMap();
         fillPutRequestMap();
@@ -52,16 +48,23 @@ public class MayorServlet extends AbstractApiServlet {
      * Fill Map of method to execute GET by path:
      * - "/"
      * - "/{id}"
+     * - "/{id}/attributes"
      */
     public void fillGetRequestMap() {
         pathGetMap = new ConcurrentHashMap<>();
         pathGetMap.put("^/$",
-                (vars, resp) -> printJsonToResp(resp, () -> mayorService.getAll())
+                (vars, resp) -> printJsonToResp(resp, () -> cityService.getAll())
         );
         pathGetMap.put("^/([0-9]+)/?$",
                 (vars, resp) -> {
-                    Long mayorId = Long.valueOf(vars.get("URL_1"));
-                    printJsonToResp(resp, () -> mayorService.getById(mayorId));
+                    Long cityId = Long.valueOf(vars.get("URL_1"));
+                    printJsonToResp(resp, () -> cityService.getById(cityId));
+                }
+        );
+        pathGetMap.put("^/([0-9]+)/attributes/?$",
+                (vars, resp) -> {
+                    Long cityId = Long.valueOf(vars.get("URL_1"));
+                    printJsonToResp(resp, () -> cityService.getCityAttributes(cityId));
                 }
         );
     }
@@ -78,8 +81,8 @@ public class MayorServlet extends AbstractApiServlet {
                 return;
             }
             printJsonToResp(resp, () -> {
-                MayorDTO mayor = gson.fromJson(json, MayorDTO.class);
-                return mayorService.create(mayor);
+                CityDTO city = gson.fromJson(json, CityDTO.class);
+                return cityService.create(city);
             });
         });
     }
@@ -96,10 +99,17 @@ public class MayorServlet extends AbstractApiServlet {
                 return;
             }
             printJsonToResp(resp, () -> {
-                MayorDTO mayor = gson.fromJson(json, MayorDTO.class);
-                Long mayorId = Long.valueOf(vars.get("URL_1"));
-                mayor.setId(mayorId);
-                return mayorService.update(mayor);
+                CityDTO city = gson.fromJson(json, CityDTO.class);
+                Long cityId = Long.valueOf(vars.get("URL_1"));
+                city.setId(cityId);
+                return cityService.update(city);
+            });
+        });
+        pathPutMap.put("/([0-9]+)/attributes/([0-9]+)/?$", (vars, resp) -> {
+            printJsonToResp(resp, () -> {
+                Long cityId = Long.valueOf(vars.get("URL_1"));
+                Long attributeId = Long.valueOf(vars.get("URL_2"));
+                return cityService.addCityAttribute(cityId, attributeId);
             });
         });
     }
@@ -110,11 +120,12 @@ public class MayorServlet extends AbstractApiServlet {
      */
     public void fillDeleteRequestMap() {
         pathDeleteMap = new ConcurrentHashMap<>();
-        pathDeleteMap.put("^/([0-9]+)/?$", (vars, resp) -> {
-            MayorDTO mayor = new MayorDTO();
-            Long mayorId = Long.valueOf(vars.get("URL_1"));
-            mayor.setId(mayorId);
-            mayorService.delete(mayor);
-        });
+        pathDeleteMap.put("^/([0-9]+)/?$",
+                (vars, resp) -> {
+                    CityDTO city = new CityDTO();
+                    Long cityId = Long.valueOf(vars.get("URL_1"));
+                    city.setId(cityId);
+                    cityService.delete(city);
+                });
     }
 }

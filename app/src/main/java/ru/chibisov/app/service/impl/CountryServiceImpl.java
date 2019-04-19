@@ -1,10 +1,10 @@
-package ru.chibisov.app.servicies.impl;
+package ru.chibisov.app.service.impl;
 
 import dai.CountryDao;
 import entities.Country;
 import ru.chibisov.app.dto.CountryDTO;
 import ru.chibisov.app.dto.mapper.CountryMapperDTO;
-import ru.chibisov.app.servicies.CountryService;
+import ru.chibisov.app.service.CountryService;
 
 import java.util.ArrayList;
 import java.util.List;

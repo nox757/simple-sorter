@@ -1,10 +1,10 @@
-package ru.chibisov.app.servicies.impl;
+package ru.chibisov.app.service.impl;
 
 import dai.AttributeCityDao;
 import entities.AttributeCity;
 import ru.chibisov.app.dto.AttributeDTO;
 import ru.chibisov.app.dto.mapper.AttributeMapperDTO;
-import ru.chibisov.app.servicies.AttributeService;
+import ru.chibisov.app.service.AttributeService;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,6 @@
-package ru.chibisov.app.servicies;
+package ru.chibisov.app.service;
 
 import ru.chibisov.app.dto.AttributeTypeDTO;
-import ru.chibisov.app.dto.RegionDTO;
 
 import java.util.List;
 

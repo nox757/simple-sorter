@@ -1,4 +1,4 @@
-package ru.chibisov.app.listeners;
+package ru.chibisov.app.listener;
 
 import entities.AttributeCity;
 import entities.AttributeType;
@@ -15,18 +15,18 @@ import hibernate.dao.RegionDaoImpl;
 import hibernate.util.HibernateSessionEx;
 import hibernate.util.HibernateUtil;
 import org.hibernate.SessionFactory;
-import ru.chibisov.app.servicies.AttributeService;
-import ru.chibisov.app.servicies.AttributeTypeService;
-import ru.chibisov.app.servicies.CityService;
-import ru.chibisov.app.servicies.CountryService;
-import ru.chibisov.app.servicies.MayorService;
-import ru.chibisov.app.servicies.RegionService;
-import ru.chibisov.app.servicies.impl.AttributeServiceImpl;
-import ru.chibisov.app.servicies.impl.AttributeTypeServiceImpl;
-import ru.chibisov.app.servicies.impl.CityServiceImpl;
-import ru.chibisov.app.servicies.impl.CountryServiceImpl;
-import ru.chibisov.app.servicies.impl.MayorServiceImpl;
-import ru.chibisov.app.servicies.impl.RegionServiceImpl;
+import ru.chibisov.app.service.AttributeService;
+import ru.chibisov.app.service.AttributeTypeService;
+import ru.chibisov.app.service.CityService;
+import ru.chibisov.app.service.CountryService;
+import ru.chibisov.app.service.MayorService;
+import ru.chibisov.app.service.RegionService;
+import ru.chibisov.app.service.impl.AttributeServiceImpl;
+import ru.chibisov.app.service.impl.AttributeTypeServiceImpl;
+import ru.chibisov.app.service.impl.CityServiceImpl;
+import ru.chibisov.app.service.impl.CountryServiceImpl;
+import ru.chibisov.app.service.impl.MayorServiceImpl;
+import ru.chibisov.app.service.impl.RegionServiceImpl;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

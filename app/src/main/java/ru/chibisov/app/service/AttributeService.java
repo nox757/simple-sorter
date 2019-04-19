@@ -1,4 +1,4 @@
-package ru.chibisov.app.servicies;
+package ru.chibisov.app.service;
 
 import ru.chibisov.app.dto.AttributeDTO;
 

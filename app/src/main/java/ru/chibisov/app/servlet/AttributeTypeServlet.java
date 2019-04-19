@@ -1,7 +1,7 @@
-package ru.chibisov.app.servlets;
+package ru.chibisov.app.servlet;
 
 import ru.chibisov.app.dto.AttributeTypeDTO;
-import ru.chibisov.app.servicies.AttributeTypeService;
+import ru.chibisov.app.service.AttributeTypeService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

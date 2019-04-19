@@ -6,13 +6,13 @@
 
     <listener>
         <listener-class>
-            ru.chibisov.app.listeners.AppServletContextListener
+            ru.chibisov.app.listener.AppServletContextListener
         </listener-class>
     </listener>
 
     <servlet>
         <servlet-name>CountryServlet</servlet-name>
-        <servlet-class>ru.chibisov.app.servlets.CountryServlet</servlet-class>
+        <servlet-class>ru.chibisov.app.servlet.CountryServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>CountryServlet</servlet-name>
@@ -21,7 +21,7 @@
 
     <servlet>
         <servlet-name>RegionServlet</servlet-name>
-        <servlet-class>ru.chibisov.app.servlets.RegionServlet</servlet-class>
+        <servlet-class>ru.chibisov.app.servlet.RegionServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RegionServlet</servlet-name>
@@ -30,7 +30,7 @@
 
     <servlet>
         <servlet-name>CityServlet</servlet-name>
-        <servlet-class>ru.chibisov.app.servlets.CityServlet</servlet-class>
+        <servlet-class>ru.chibisov.app.servlet.CityServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>CityServlet</servlet-name>
@@ -39,7 +39,7 @@
 
     <servlet>
         <servlet-name>MayorServlet</servlet-name>
-        <servlet-class>ru.chibisov.app.servlets.MayorServlet</servlet-class>
+        <servlet-class>ru.chibisov.app.servlet.MayorServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>MayorServlet</servlet-name>
@@ -48,7 +48,7 @@
 
     <servlet>
         <servlet-name>AttributeServlet</servlet-name>
-        <servlet-class>ru.chibisov.app.servlets.AttributeServlet</servlet-class>
+        <servlet-class>ru.chibisov.app.servlet.AttributeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AttributeServlet</servlet-name>
@@ -57,7 +57,7 @@
 
     <servlet>
         <servlet-name>AttributeTypeServlet</servlet-name>
-        <servlet-class>ru.chibisov.app.servlets.AttributeTypeServlet</servlet-class>
+        <servlet-class>ru.chibisov.app.servlet.AttributeTypeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AttributeTypeServlet</servlet-name>
