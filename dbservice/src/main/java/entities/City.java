@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.List;
 
 @Entity
@@ -24,25 +25,26 @@ public class City implements Identifiable<Long> {
 
     @Id
     @Column(name = "city_id")
-    @SequenceGenerator(name="city_seq", sequenceName="city_city_id_seq", allocationSize=1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="city_seq")
+    @SequenceGenerator(name = "city_seq", sequenceName = "city_city_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "city_seq")
     private Long id;
 
     @Column(name = "name")
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mayor_id")
     private Mayor mayor;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "city_attribute",
             joinColumns = @JoinColumn(name = "city_id"),
             inverseJoinColumns = @JoinColumn(name = "attribute_id"))
     private List<AttributeCity> attributes;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="region_id")
+    @JoinColumn(name = "region_id")
     private Region region;
 
     public City() {
@@ -86,5 +88,20 @@ public class City implements Identifiable<Long> {
 
     public void setRegion(Region region) {
         this.region = region;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        City city = (City) o;
+
+        return id.equals(city.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

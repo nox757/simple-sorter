@@ -20,7 +20,7 @@ public class HibernateUtil {
     }
 
     public SessionFactory getSessionFactory() throws HibernateSessionEx {
-        if(sessionFactory == null) {
+        if (sessionFactory == null) {
             try {
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());
@@ -29,5 +29,16 @@ public class HibernateUtil {
             }
         }
         return sessionFactory;
+    }
+
+    public void closeSessionFactory() throws HibernateSessionEx {
+        if (sessionFactory == null) {
+            return;
+        }
+        try {
+            sessionFactory.close();
+        } catch (Exception ex) {
+            throw new HibernateSessionEx(ex);
+        }
     }
 }

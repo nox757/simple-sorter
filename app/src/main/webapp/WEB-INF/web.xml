@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+
+    <listener>
+        <listener-class>
+            ru.chibisov.app.listener.AppServletContextListener
+        </listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>CountryServlet</servlet-name>
+        <servlet-class>ru.chibisov.app.servlet.CountryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CountryServlet</servlet-name>
+        <url-pattern>/countries/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RegionServlet</servlet-name>
+        <servlet-class>ru.chibisov.app.servlet.RegionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegionServlet</servlet-name>
+        <url-pattern>/regions/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CityServlet</servlet-name>
+        <servlet-class>ru.chibisov.app.servlet.CityServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CityServlet</servlet-name>
+        <url-pattern>/cities/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MayorServlet</servlet-name>
+        <servlet-class>ru.chibisov.app.servlet.MayorServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MayorServlet</servlet-name>
+        <url-pattern>/mayors/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AttributeServlet</servlet-name>
+        <servlet-class>ru.chibisov.app.servlet.AttributeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AttributeServlet</servlet-name>
+        <url-pattern>/attributes/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AttributeTypeServlet</servlet-name>
+        <servlet-class>ru.chibisov.app.servlet.AttributeTypeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AttributeTypeServlet</servlet-name>
+        <url-pattern>/attributetypes/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>
