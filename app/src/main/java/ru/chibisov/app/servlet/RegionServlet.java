@@ -1,7 +1,7 @@
-package ru.chibisov.app.servlets;
+package ru.chibisov.app.servlet;
 
 import ru.chibisov.app.dto.RegionDTO;
-import ru.chibisov.app.servicies.RegionService;
+import ru.chibisov.app.service.RegionService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
