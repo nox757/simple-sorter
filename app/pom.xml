@@ -74,11 +74,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>ru.chibisov.app.App</mainClass>
-                        </manifest>
-                    </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>

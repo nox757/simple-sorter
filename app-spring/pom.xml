@@ -7,12 +7,7 @@
     <artifactId>app-spring</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <repositories>
-        <repository><!--TODO: resolve dependencies/-->
-            <id>my-local-repo</id>
-            <url>file://D:\Documents\test\simple-sorter\app\target\app-1.0-SNAPSHOT-jar-with-dependencies.jar</url>
-        </repository>
-    </repositories>
+
     <parent>
         <groupId>ru.chibisov</groupId>
         <artifactId>simple-sort</artifactId>
@@ -23,24 +18,12 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>sorter</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dbservice</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>app</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
             <classifier>jar-with-dependencies</classifier>
         </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -83,6 +66,15 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
@@ -101,13 +93,12 @@
                 </configuration>
             </plugin>
 
-
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <warFile>/target/app-1.0-SNAPSHOT.war</warFile>
+                    <warFile>/target/app-spring-1.0-SNAPSHOT.war</warFile>
                 </configuration>
             </plugin>
         </plugins>
