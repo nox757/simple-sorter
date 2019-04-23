@@ -9,8 +9,11 @@ import java.util.List;
 @Component
 public class MapperFacadeImpl implements MapperFacade {
 
-    @Autowired
     private MapperFactory mapperFactory;
+
+    public MapperFacadeImpl(MapperFactory mapperFactory) {
+        this.mapperFactory = mapperFactory;
+    }
 
     @Override
     public <S, D> D map(S source, Class<D> destinationClass) {
