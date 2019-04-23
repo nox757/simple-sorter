@@ -1,14 +1,17 @@
 package ru.chibisov.app.spring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.chibisov.app.dto.AttributeDTO;
 import ru.chibisov.app.dto.CityDTO;
 import ru.chibisov.app.service.CityService;
+import ru.chibisov.app.spring.exception.NotFoundException;
 
 import java.util.List;
 
@@ -38,7 +41,11 @@ public class CityController {
 
     @RequestMapping(value = BY_ID, method = RequestMethod.GET)
     public CityDTO getById(@PathVariable("id") Long id) {
-        return cityService.getById(id);
+        CityDTO city = cityService.getById(id);
+        if (city == null) {
+            throw new NotFoundException("Not found city by id: " + id);
+        }
+        return city;
     }
 
     @RequestMapping(value = BY_ID, method = RequestMethod.PUT)
@@ -48,6 +55,7 @@ public class CityController {
     }
 
     @RequestMapping(value = BY_ID, method = RequestMethod.DELETE)
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable("id") Long id) {
         CityDTO city = new CityDTO().setId(id);
         cityService.delete(city);

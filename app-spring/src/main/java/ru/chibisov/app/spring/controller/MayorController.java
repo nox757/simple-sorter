@@ -1,10 +1,12 @@
 package ru.chibisov.app.spring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.chibisov.app.dto.MayorDTO;
 import ru.chibisov.app.service.MayorService;
@@ -44,6 +46,7 @@ public class MayorController {
     }
 
     @RequestMapping(value = BY_ID, method = RequestMethod.DELETE)
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable("id") Long id) {
         MayorDTO mayor = new MayorDTO().setId(id);
         mayorService.delete(mayor);

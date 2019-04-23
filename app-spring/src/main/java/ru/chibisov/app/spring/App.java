@@ -4,6 +4,8 @@ package ru.chibisov.app.spring;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 import ru.chibisov.app.spring.config.AppServiceConfig;
 
+import javax.servlet.ServletRegistration;
+
 public class App extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
@@ -19,5 +21,13 @@ public class App extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        boolean done = registration.setInitParameter("throwExceptionIfNoHandlerFound", "true");
+        if (!done) {
+            throw new RuntimeException();
+        }
     }
 }
